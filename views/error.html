@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oops! Terjadi Masalah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Mengatur font default ke Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Animasi sederhana untuk ikon */
+        .animate-wiggle {
+            animation: wiggle 1s ease-in-out infinite;
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-blue-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-8 md:p-12 rounded-xl shadow-2xl max-w-lg w-full text-center transform transition-all hover:scale-105 duration-300">
+
+        <div class="mb-6">
+             <svg class="w-20 h-20 text-orange-500 mx-auto animate-wiggle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.008v.008H12v-.008Z" />
+             </svg>
+        </div>
+
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Oops! Ada Sedikit Gangguan</h1>
+        <p class="text-gray-600 text-lg mb-8 px-4">
+            Sepertinya terjadi kesalahan di sistem kami. Jangan khawatir, tim kami sudah mengetahuinya dan sedang bekerja untuk memperbaikinya.
+        </p>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+            <p class="text-blue-800">
+                Anda bisa mencoba <button onclick="window.location.reload()" class="font-semibold underline hover:text-blue-600">memuat ulang halaman</button> atau kembali ke halaman utama.
+            </p>
+        </div>
+
+        <div class="mt-8">
+            <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1">
+                Kembali ke Beranda
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

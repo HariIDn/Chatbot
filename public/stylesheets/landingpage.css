@@ -1,0 +1,1001 @@
+/* Global CSS Variables for Theme */
+:root {
+  /* Light Mode Colors */
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --section-bg-light: #ffffff; /* Replaces --white-color, section-bg-white */
+  --section-bg-medium: #f8f8f8; /* Replaces --light-gray, section-bg-gray */
+  --primary-brand-blue: #007bff; /* Replaces --primary-color */
+  --primary-hover-blue: #0056b3; /* Replaces --secondary-color (for btn-primary hover) and --hover-color */
+  --secondary-accent-color: #007bff; /* Replaces --secondary-color (for borders/accents) */
+  --border-color: #eeeeee; /* Replaces --medium-gray */
+  --shadow-color: rgba(0, 0, 0, 0.08); /* For general shadows */
+  --hero-overlay-color: rgba(0, 0, 0, 0.4); /* Specific for hero overlay */
+  --hero-text-color: #ffffff; /* Explicitly white for light mode hero */
+  --cta-text-color: #ffffff; /* Explicitly white for light mode CTA */
+  --navbar-bg: #ffffff;
+  --card-bg: #ffffff;
+  --footer-bg: #333333;
+  --footer-text: #ffffff;
+  --admin-link-color: #cccccc; /* Lighter than footer-text for visibility */
+  --fab-bg: #007bff;
+  --fab-bubble-bg: #333333;
+  --fab-bubble-text: #ffffff;
+  --carousel-btn-bg: #f0f0f0;
+  --carousel-btn-text: #333333;
+  --border-radius: 8px; /* Consistent border radius */
+
+  /* Pop-up specific colors */
+  --popup-bg: #ffffff; /* Not used for this version, but kept for reference */
+  --popup-text: #333333; /* Not used for this version, but kept for reference */
+  --popup-border: #007bff; /* Not used for this version, but kept for reference */
+  --popup-shadow: rgba(0, 0, 0, 0.2); /* Not used for this version, but kept for reference */
+  --popup-close-btn-color: #999999; /* Not used for this version, but kept for reference */
+  --popup-close-btn-hover: #333333; /* Not used for this version, but kept for reference */
+}
+
+body[data-theme="dark"] {
+  /* Dark Mode Colors */
+  --bg-color: #1a1a1a;
+  --text-color: #f0f0f0;
+  --section-bg-light: #1a1a1a;
+  --section-bg-medium: #2a2a2a;
+  --primary-brand-blue: #66b3ff;
+  --primary-hover-blue: #4d94db;
+  --secondary-accent-color: #66b3ff;
+  --border-color: #3a3a3a;
+  --shadow-color: rgba(0, 0, 0, 0.4); /* Darker shadow for dark mode */
+  --hero-overlay-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay for dark mode */
+  --hero-text-color: #f0f0f0; /* Light gray for dark mode hero */
+  --cta-text-color: #f0f0f0; /* Light gray for dark mode CTA */
+  --navbar-bg: #1a1a1a;
+  --card-bg: #2a2a2a;
+  --footer-bg: #0d0d0d;
+  --footer-text: #cccccc;
+  --admin-link-color: #999999; /* Slightly darker for dark mode admin link */
+  --fab-bg: #66b3ff;
+  --fab-bubble-bg: #f0f0f0;
+  --fab-bubble-text: #1a1a1a;
+  --carousel-btn-bg: #3a3a3a;
+  --carousel-btn-text: #f0f0f0;
+
+  /* Pop-up specific colors for dark mode */
+  --popup-bg: #2a2a2a; /* Not used for this version, but kept for reference */
+  --popup-text: #f0f0f0; /* Not used for this version, but kept for reference */
+  --popup-border: #66b3ff; /* Not used for this version, but kept for reference */
+  --popup-shadow: rgba(0, 0, 0, 0.6); /* Not used for this version, but kept for reference */
+  --popup-close-btn-color: #cccccc; /* Not used for this version, but kept for reference */
+  --popup-close-btn-hover: #f0f0f0; /* Not used for this version, but kept for reference */
+}
+
+/* Apply variables to elements */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* === ANIMASI: Definisi Keyframes (Jika belum ada di style.css lama atau ingin spesifik) === */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleUp { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+/* === Gaya Dasar Tambahan/Override untuk Landing Page === */
+html {
+  scroll-behavior: smooth; /* Pastikan ini ada */
+}
+body.landing-page-body {
+  background-color: var(--section-bg-medium); /* Menggunakan variabel global */
+}
+
+/* -- Navigasi Landing Page -- */
+.navbar {
+  background-color: var(--navbar-bg);
+  padding: 15px 0;
+  box-shadow: 0 2px 4px var(--shadow-color); /* Menggunakan variabel global */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  box-shadow: none;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.nav-logo {
+  display: flex; /* Ensure flex for icon and text alignment */
+  align-items: center;
+  gap: 6px; /* Adjusted gap for smaller logo */
+  font-size: 1.3rem; /* Adjusted font size for smaller logo */
+  font-weight: 700;
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  text-decoration: none;
+}
+.nav-logo svg {
+  width: 28px; /* Adjusted size for logo icon */
+  height: 28px; /* Adjusted size for logo icon */
+  fill: var(--primary-brand-blue); /* Logo icon color */
+}
+.nav-right { /* New style for the wrapper */
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Adjusted gap between nav-links and theme-toggle-btn */
+}
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 25px;
+}
+.nav-link {
+  text-decoration: none;
+  color: var(--text-color); /* Menggunakan variabel global */
+  font-weight: 500;
+  transition: color 0.2s ease;
+  padding: 5px 0;
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  transform: scaleX(0);
+  transform-origin: bottom left;
+  transition: transform 0.3s ease-out;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+}
+.nav-link:hover,
+.nav-link.active {
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+}
+
+/* Custom styles for the theme toggle button */
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  margin-left: 0; /* Removed margin-left as it's now handled by .nav-right gap */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color); /* Use text color for button icon */
+  transition: color 0.3s ease;
+}
+
+.theme-toggle-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor; /* Inherit color from button */
+  transition: fill 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  color: var(--primary-brand-blue); /* Hover effect */
+}
+
+
+/* -- Hero Section Landing Page -- */
+.hero {
+  background-image: url("/images/header.jpg"); /* Ganti dengan path gambar Anda */
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  padding: 100px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--hero-overlay-color); /* Menggunakan variabel global */
+  z-index: 1;
+}
+.hero .container {
+  position: relative;
+  z-index: 2; /* Di atas overlay */
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+.hero h1 {
+  color: var(--hero-text-color); /* Menggunakan variabel baru untuk kontras */
+  margin-bottom: 20px;
+  padding-bottom: 0;
+  border-bottom: none;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 0.8s 0.2s ease-out backwards;
+  will-change: opacity, transform;
+  font-size: 2.8rem;
+}
+.hero p {
+  color: var(--hero-text-color); /* Menggunakan variabel baru untuk kontras */
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto 30px auto;
+  line-height: 1.7;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.8s 0.4s ease-out backwards;
+  will-change: opacity, transform;
+}
+.hero .btn {
+  animation: fadeInUp 0.8s 0.6s ease-out backwards;
+  will-change: opacity, transform;
+}
+.hero .btn-secondary {
+  background-color: transparent;
+  border-color: var(--hero-text-color); /* Menggunakan variabel baru untuk kontras */
+  color: var(--hero-text-color); /* Menggunakan variabel baru untuk kontras */
+}
+.hero .btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Tetap spesifik untuk efek transparan */
+  border-color: var(--hero-text-color); /* Menggunakan variabel baru untuk kontras */
+  color: var(--hero-text-color); /* Menggunakan variabel baru untuk kontras */
+}
+
+/* -- Tombol Generik Landing Page (jika berbeda dari tombol umum) -- */
+.btn {
+  border-radius: 20px;
+  padding: 12px 25px;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease, transform 0.2s ease;
+  font-size: 1rem;
+  display: inline-block;
+  border: 1px solid transparent;
+  text-align: center;
+}
+.btn-primary {
+  background-color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  border-color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  color: var(--bg-color); /* Menggunakan variabel global */
+}
+.btn-primary:hover {
+  background-color: var(--primary-hover-blue); /* Menggunakan variabel global */
+  border-color: var(--primary-hover-blue); /* Menggunakan variabel global */
+  color: var(--bg-color); /* Menggunakan variabel global */
+  transform: scale(1.03);
+}
+.btn-secondary {
+  background-color: transparent;
+  border-color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+}
+.btn-secondary:hover {
+  background-color: var(--primary-hover-blue); /* Menggunakan variabel global */
+  border-color: var(--primary-hover-blue); /* Menggunakan variabel global */
+  color: var(--bg-color); /* Menggunakan variabel global */
+  transform: scale(1.03);
+}
+
+/* -- Sections Landing Page -- */
+.section {
+  padding: 70px 0;
+  border-top: 1px solid var(--border-color); /* Menggunakan variabel global */
+}
+#hero + .section {
+  border-top: none;
+}
+#layanan {
+  background-color: var(--section-bg-light); /* Menggunakan variabel global */
+  border-top: 4px solid var(--secondary-accent-color); /* Menggunakan variabel global */
+  padding-top: calc(70px - 4px);
+}
+.section-bg-gray {
+  background-color: var(--section-bg-medium); /* Menggunakan variabel global */
+}
+.section-bg-white {
+  background-color: var(--section-bg-light); /* Menggunakan variabel global */
+}
+
+/* Styles for the chatbot section */
+.chatbot-section {
+  background-color: transparent; /* Changed to transparent for seamless look */
+  padding: 30px 0; /* Reduced padding for a more seamless look */
+  text-align: center;
+}
+
+.chatbot-section .section-title {
+  color: var(--primary-brand-blue); /* Blue title */
+  margin-bottom: 20px;
+}
+
+.chatbot-section p {
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-color); /* Ensure text adapts to theme */
+}
+
+.chatbot-section .btn-primary {
+  background-color: var(--primary-brand-blue);
+  color: var(--bg-color);
+  border-radius: 8px;
+  padding: 12px 25px;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+.chatbot-section .btn-primary:hover {
+  background-color: var(--primary-hover-blue);
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.2rem;
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  margin-bottom: 50px;
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 15px;
+}
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: var(--secondary-accent-color); /* Menggunakan variabel global */
+  border-radius: 2px;
+}
+
+/* -- Service Cards Landing Page -- */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 35px;
+  margin-top: 30px;
+}
+.service-card {
+  background-color: var(--card-bg); /* Menggunakan variabel global */
+  border-radius: var(--border-radius);
+  padding: 35px 25px;
+  box-shadow: 0 8px 16px var(--shadow-color); /* Menggunakan variabel global */
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--border-color); /* Added for definition in dark mode */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 86, 179, 0.18); /* Specific hover shadow, can be adjusted */
+}
+.service-card .service-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  margin-bottom: 20px;
+}
+.service-card h3 {
+  font-size: 1.4rem;
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+.service-card p {
+  font-size: 0.95rem;
+  color: var(--text-color); /* Menggunakan variabel global */
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* -- Information Section (Carousel Styles) Landing Page -- */
+#informasi {
+  background: linear-gradient(
+    180deg,
+    var(--section-bg-light) 0%, /* Menggunakan variabel global */
+    var(--section-bg-medium) 100% /* Menggunakan variabel global */
+  );
+  border-top: 1px solid var(--border-color); /* Menggunakan variabel global */
+}
+.info-carousel {
+  position: relative;
+  padding: 0 40px;
+  margin-top: 30px;
+}
+.carousel-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+.carousel-track {
+  display: flex;
+  margin-left: 0;
+  margin-right: 0;
+  transition: transform 0.5s ease-in-out;
+}
+.info-item.carousel-item {
+  background-color: var(--card-bg); /* Menggunakan variabel global */
+  border-radius: var(--border-radius);
+  padding: 25px 30px;
+  box-shadow: 0 8px 16px var(--shadow-color); /* Menggunakan variabel global */
+  border-left: 5px solid var(--secondary-accent-color); /* Menggunakan variabel global */
+  flex: 0 0 calc(100% / 3 - 20px);
+  margin-right: 30px;
+  margin-bottom: 0;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+}
+.carousel-item:last-child {
+  margin-right: 0;
+}
+.info-item.carousel-item h3 {
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+.info-item.carousel-item p {
+  color: var(--text-color); /* Menggunakan variabel global */
+  line-height: 1.7;
+  margin-bottom: 5px;
+}
+.info-item.carousel-item p:last-child {
+  margin-bottom: 0;
+}
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background-color: var(--carousel-btn-bg); /* Menggunakan variabel global */
+  color: var(--carousel-btn-text); /* Menggunakan variabel global */
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 1.7rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.carousel-button:hover {
+  background-color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  transform: translateY(-50%) scale(1.1);
+}
+.carousel-button.prev {
+  left: -10px;
+}
+.carousel-button.next {
+  right: -10px;
+}
+
+/* -- CTA Section Landing Page -- */
+.cta-section {
+  background: linear-gradient(
+    135deg,
+    var(--secondary-accent-color) 0%, /* Menggunakan variabel global */
+    var(--primary-brand-blue) 100% /* Menggunakan variabel global */
+  );
+  color: var(--cta-text-color); /* Menggunakan variabel baru untuk kontras */
+  padding: 70px 0;
+  text-align: center;
+  border-top: none;
+}
+.cta-section h2 {
+  font-size: 2.2rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 700;
+  color: var(--cta-text-color); /* Menggunakan variabel baru untuk kontras */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+.cta-section p {
+  font-size: 1.15rem;
+  margin-bottom: 40px;
+  opacity: 0.95;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta-section .btn-primary {
+  background-color: var(--bg-color); /* Menggunakan variabel global */
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  border-color: var(--bg-color); /* Menggunakan variabel global */
+  padding: 16px 40px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  box-shadow: 0 4px 10px var(--shadow-color); /* Menggunakan variabel global */
+}
+.cta-section .btn-primary:hover {
+  background-color: var(--primary-hover-blue); /* Menggunakan variabel global */
+  color: var(--bg-color); /* Menggunakan variabel global */
+  border-color: var(--primary-hover-blue); /* Menggunakan variabel global */
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* Can be adjusted with variable */
+}
+
+/* -- Kontak & Lokasi Section Landing Page -- */
+#info-kontak {
+  background-color: var(--section-bg-light); /* Menggunakan variabel global */
+  border-top: 1px solid var(--border-color); /* Menggunakan variabel global */
+}
+.kontak-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 50px;
+  margin-top: 30px;
+}
+.kontak-detail h3,
+.kontak-map h3 {
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-weight: 600;
+  font-size: 1.6rem;
+  border-bottom: 3px solid var(--secondary-accent-color); /* Menggunakan variabel global */
+  padding-bottom: 12px;
+  display: inline-block;
+}
+.kontak-item {
+  margin-bottom: 25px;
+  line-height: 1.7;
+}
+.kontak-item strong {
+  display: flex;
+  align-items: center;
+  color: var(--text-color); /* Menggunakan variabel global */
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+.kontak-item strong i {
+  color: var(--secondary-accent-color); /* Menggunakan variabel global */
+  margin-right: 12px;
+  font-size: 1.2rem;
+  width: 22px;
+  text-align: center;
+  font-style: normal;
+}
+.kontak-item strong i::before {
+  content: "✓";
+  font-weight: bold;
+}
+.kontak-item p,
+.kontak-item ul {
+  margin: 0;
+  padding: 0;
+  color: var(--text-color); /* Menggunakan variabel global */
+}
+.kontak-item ul {
+  list-style: none;
+  padding-left: 34px;
+}
+.kontak-item li {
+  margin-bottom: 5px;
+}
+.kontak-item a {
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+.kontak-item a:hover {
+  color: var(--secondary-accent-color); /* Menggunakan variabel global */
+  text-decoration: underline;
+}
+.kontak-map iframe {
+  border-radius: var(--border-radius);
+  box-shadow: 0 8px 16px var(--shadow-color); /* Menggunakan variabel global */
+  width: 100%;
+  max-width: 100%;
+  height: 380px;
+}
+.kontak-social {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color); /* Menggunakan variabel global */
+}
+.kontak-social strong {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+.kontak-social a {
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  font-size: 2rem;
+  margin-right: 20px;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+.kontak-social a:hover {
+  color: var(--secondary-accent-color); /* Menggunakan variabel global */
+  transform: scale(1.15) rotate(-5deg);
+}
+.kontak-social a:last-child {
+  margin-right: 0;
+}
+
+/* -- Footer Landing Page -- */
+footer {
+  background-color: var(--footer-bg); /* Menggunakan variabel global */
+  color: var(--footer-text); /* Menggunakan variabel global */
+  padding: 30px 0;
+  margin-top: 0;
+  font-size: 0.9rem;
+  border-top: 5px solid var(--primary-brand-blue); /* Menggunakan variabel global */
+}
+footer .container {
+  flex-wrap: wrap;
+  gap: 15px;
+  text-align: center;
+}
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.footer-content p {
+  margin: 0;
+}
+footer a {
+  color: var(--footer-text); /* Menggunakan variabel global */
+  text-decoration: none;
+  transition: text-decoration 0.2s ease, color 0.2s ease;
+}
+footer a:hover {
+  text-decoration: underline;
+  color: var(--secondary-accent-color); /* Menggunakan variabel global */
+}
+.admin-login-footer {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-color); /* Menggunakan variabel global */
+}
+.admin-login-footer a {
+  color: var(--admin-link-color); /* Menggunakan variabel baru untuk kontras */
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+.admin-login-footer a:hover {
+  color: var(--primary-brand-blue); /* Menggunakan variabel global */
+  text-decoration: underline;
+}
+
+/* -- Floating Action Button (FAB) Landing Page -- */
+.fab {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(
+    135deg,
+    var(--secondary-accent-color), /* Menggunakan variabel global */
+    var(--primary-brand-blue) /* Menggunakan variabel global */
+  );
+  color: var(--bg-color); /* Menggunakan variabel global */
+  border-radius: 50%;
+  box-shadow: 0 5px 15px var(--shadow-color); /* Menggunakan variabel global */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  z-index: 1001;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px var(--shadow-color); /* Menggunakan variabel global */
+}
+.fab svg {
+  width: 30px;
+  height: 30px;
+  fill: currentColor;
+  transition: transform 0.3s ease;
+}
+.fab:hover svg {
+  transform: rotate(-10deg);
+}
+.fab-bubble {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) scale(0.9);
+  background-color: var(--fab-bubble-bg); /* Menggunakan variabel global */
+  color: var(--fab-bubble-text); /* Menggunakan variabel global */
+  padding: 8px 15px;
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px var(--shadow-color); /* Menggunakan variabel global */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out,
+    visibility 0s 0.2s linear;
+  z-index: 1002;
+  pointer-events: none; /* Allows clicks to pass through when not active */
+  display: flex; /* To align text and close button */
+  align-items: center;
+  gap: 8px; /* Space between text and close button */
+}
+
+/* Style for the close button inside the FAB bubble */
+.fab-bubble-close-btn {
+  background: none;
+  border: none;
+  color: var(--fab-bubble-text);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 5px;
+  line-height: 1;
+  transition: color 0.2s ease;
+  pointer-events: auto; /* Make sure button is clickable */
+}
+
+.fab-bubble-close-btn:hover {
+  color: var(--primary-brand-blue); /* Adjust hover color for visibility */
+}
+
+/* Class to show the FAB bubble as a promo */
+.fab-bubble.show-promo {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) scale(1);
+  transition-delay: 0s, 0s, 0s;
+  pointer-events: auto; /* Make the bubble clickable when shown as promo */
+}
+
+/* Ensure original hover effect still works when promo is not active */
+.fab:hover .fab-bubble.show-promo,
+.fab:focus .fab-bubble.show-promo {
+  /* No change, it's already visible */
+}
+
+/* Hide original hover effect when promo is active */
+.fab-bubble.show-promo {
+    /* Override default hover visibility for the bubble itself */
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(-50%) scale(1) !important;
+    transition-delay: 0s !important;
+}
+
+
+/* -- Animasi Scroll Reveal Landing Page -- */
+.reveal-on-scroll {
+  opacity: 0;
+  transition: opacity 0.8s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+.reveal-fade-in {
+  /* Hanya opacity */
+}
+.reveal-slide-up {
+  transform: translateY(30px);
+}
+.reveal-scale-up {
+  transform: scale(0.9);
+}
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* -- Penyesuaian Responsif Landing Page -- */
+@media (max-width: 992px) {
+  .info-item.carousel-item {
+    flex-basis: calc(100% / 2 - 15px);
+    margin-right: 30px;
+  }
+  .info-carousel {
+    padding: 0 35px;
+  }
+  .carousel-button {
+    width: 35px;
+    height: 35px;
+    font-size: 1.3rem;
+    left: 5px;
+    right: 5px;
+  }
+  .service-card .service-icon {
+    width: 50px;
+    height: 50px;
+  } /* Ukuran ikon di tablet */
+}
+
+@media (max-width: 768px) {
+  /* Penyesuaian umum mobile untuk landing page */
+  .navbar .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .nav-right { /* Ensure nav-right also stacks vertically on mobile */
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%; /* Take full width on mobile */
+    gap: 10px; /* Adjust gap for vertical stacking */
+  }
+  .nav-links {
+    margin-top: 15px;
+    gap: 0;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+  }
+  .nav-link {
+    padding: 10px 0;
+    width: 100%;
+  }
+  .nav-link:last-child {
+    border-bottom: none;
+  }
+  .theme-toggle-btn {
+    margin-top: 10px; /* Add some space when stacked */
+  }
+
+  .hero {
+    padding: 60px 0;
+  }
+  .hero h1 {
+    font-size: 2rem;
+    animation: none;
+  }
+  .hero p {
+    font-size: 1rem;
+    animation: none;
+  }
+  .hero .btn {
+    display: block;
+    margin-bottom: 10px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 250px;
+    animation: none;
+  }
+  .hero .btn:last-child {
+    margin-bottom: 0;
+  }
+
+  .section {
+    padding: 50px 0;
+  }
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+  }
+  .section-title::after {
+    width: 60px;
+    height: 2px;
+  }
+
+  .service-card {
+    padding: 25px 20px;
+  }
+  .service-card .service-icon {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 15px;
+  } /* Ukuran ikon di mobile */
+  .service-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .info-item.carousel-item {
+    flex-basis: 100%;
+    margin-right: 0;
+    padding: 20px 25px;
+    min-height: auto;
+  }
+  .info-carousel {
+    padding: 0 30px;
+  }
+  .carousel-button {
+    width: 35px;
+    height: 35px;
+    font-size: 1.3rem;
+    left: 0px;
+    right: 0px;
+  }
+
+  .cta-section {
+    padding: 50px 0;
+  }
+  .cta-section h2 {
+    font-size: 1.8rem;
+  }
+  .cta-section p {
+    font-size: 1.0rem;
+  }
+  .cta-section .btn-primary {
+    padding: 14px 35px;
+    font-size: 1.05rem;
+  }
+
+  .kontak-grid {
+    gap: 30px;
+  }
+  .kontak-detail h3,
+  .kontak-map h3 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+  .kontak-item strong {
+    font-size: 1.0rem;
+  }
+  .kontak-item strong i {
+    font-size: 1.1rem;
+    margin-right: 10px;
+    width: 20px;
+  }
+  .kontak-item ul {
+    padding-left: 30px;
+  }
+  .kontak-map iframe {
+    height: 300px;
+  }
+  .kontak-social a {
+    font-size: 1.8rem;
+    margin-right: 15px;
+  }
+
+  footer .container {
+    /* Biarkan default (block) agar admin login di bawah */
+  }
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  .admin-login-footer {
+    margin-top: 20px;
+  }
+
+  .fab {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+  }
+  .fab svg {
+    width: 24px;
+    height: 24px;
+  }
+  /* .fab-bubble { display: none; } */ /* Sembunyikan bubble di mobile jika terlalu mengganggu */
+}

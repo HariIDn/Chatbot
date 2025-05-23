@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    QuickKonsul - Layanan Kesehatan Bayi Terbaik di Indonesia
+  </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <link rel="stylesheet" href="/stylesheets/landingpage.css" />
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h14v2zm0-3H6V9h12v2zm0-3H6V6h14v2z" />
+        </svg>
+        QuickKonsul
+      </a>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="#hero" class="nav-link active">Beranda</a></li>
+          <li><a href="#chatbot-fitur" class="nav-link">Chatbot</a></li>
+          <li><a href="#layanan" class="nav-link">Layanan Kami</a></li>
+          <li><a href="#informasi" class="nav-link">Info Kesehatan</a></li>
+          <li><a href="#info-kontak" class="nav-link">Kontak</a></li>
+        </ul>
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark mode">
+          <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.73 2.36-4.65 2.36-3.61 0-6.54-2.93-6.54-6.54 0-1.92.99-3.67 2.36-4.65-.44-.06-.9-.1-1.36-.1z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="hero">
+    <div class="container">
+      <h1>Konsultasikan Keluhan Buah Hati dan Dapatkan Jawaban Secara Cepat</h1>
+      <p>
+        QuickKonsul hadir di Indonesia untuk memberikan pelayanan
+        kesehatan bayi yang cepat. Dapatkan konsultasi instan dan jawaban cepat
+        melalui fitur chatbot kami yang inovatif!
+      </p>
+      <a href="#layanan" class="btn btn-primary">Lihat Layanan Kami</a>
+      <a href="#chatbot-fitur" class="btn btn-secondary" style="margin-left: 10px">Coba Chatbot Sekarang</a>
+    </div>
+  </header>
+
+  <section id="chatbot-fitur" class="section chatbot-section">
+    <div class="container">
+      <h2 class="section-title reveal-on-scroll reveal-slide-up">Konsultasi Cepat dengan Chatbot Kami</h2>
+      <p class="reveal-on-scroll reveal-slide-up">
+        Dapatkan jawaban instan untuk pertanyaan seputar kesehatan bayi Anda,
+        jadwalkan konsultasi, atau temukan informasi penting melalui chatbot
+        pintar kami yang siap membantu 24/7. Fitur ini dirancang untuk
+        memberikan dukungan cepat dan efisien kapan pun Anda membutuhkannya.
+      </p>
+      <a href="/chatbot" class="btn btn-primary reveal-on-scroll reveal-slide-up">Mulai Chat Sekarang</a>
+    </div>
+  </section>
+
+  <section id="layanan" class="section">
+    <div class="container">
+      <h2 class="section-title">Layanan Unggulan Kami</h2>
+      <div class="services-grid">
+        <div class="service-card">
+          <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+            width="40" height="40">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-5.07c-.51-1.24-1.28-2.37-2.19-3.34.91-.41 1.96-.66 3.07-.66 2.3 0 4.31.99 5.74 2.58.1.11.15.26.15.42 0 .28-.22.5-.5.5zm-5 1v-1c0-.45-.32-.82-.75-.95C14.72 7.4 14.1 7 13.5 7h-3c-.6 0-1.22.4-1.75.95-.43.13-.75.5-.75.95v1c-1.8.34-3.43 1.2-4.65 2.42-.34.34-.34.89 0 1.23.38.38.83.67 1.3.9.47.23.96.41 1.46.55.5.14 1.02.23 1.54.27V20c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-5.63c.52-.04 1.04-.13 1.54-.27.5-.14.99-.32 1.46-.55.47-.23.92-.52 1.3-.9.34-.34.34-.89 0-1.23-1.22-1.22-2.85-2.08-4.65-2.42z" />
+          </svg>
+          <h3>Pemeriksaan Rutin Bayi</h3>
+          <p>
+            Monitoring tumbuh kembang, deteksi dini masalah kesehatan, dan
+            konsultasi perkembangan bayi Anda.
+          </p>
+        </div>
+        <div class="service-card">
+          <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+            width="40" height="40">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M21 6.5c0-.28-.22-.5-.5-.5h-2.5V4c0-.55-.45-1-1-1h-1c-.55 0-1 .45-1 1v2H9V4c0-.55-.45-1-1-1H7c-.55 0-1 .45-1 1v2H3.5c-.28 0-.5.22-.5.5v1c0 .28.22.5.5.5H6v1.58c-1.75.3-3.07 1.8-3.07 3.67C2.93 15.5 4.43 17 6.25 17h11.5C19.57 17 21.07 15.5 21.07 13.75c0-1.87-1.32-3.37-3.07-3.67V8h2.5c.28 0 .5-.22.5-.5v-1zm-3.09 5.25c-.19.07-.3.28-.3.5v1.5h-1.5c-.28 0-.5.22-.5.5s.22.5.5.5h1.5v1.5c0 .22.11.43.3.5.19.07.41.03.55-.1l2.5-2.5c.2-.2.2-.51 0-.71l-2.5-2.5c-.14-.14-.36-.17-.55-.1zM17 8H7V6h10v2z" />
+          </svg>
+          <h3>Imunisasi Lengkap</h3>
+          <p>
+            Menyediakan jadwal imunisasi sesuai rekomendasi IDAI untuk
+            melindungi si kecil dari berbagai penyakit.
+          </p>
+        </div>
+        <div class="service-card">
+          <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+            width="40" height="40">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6v-1h12v1zm0-3H6v-1h12v1zm0-3H6V8c0-1.66 1.34-3 3-3s3 1.34 3 3v1h2c1.1 0 2 .9 2 2v1zm-8-3c0-.55.45-1 1-1s1 .45 1 1v1h-2V8z" />
+          </svg>
+          <h3>Konsultasi Penyakit Anak</h3>
+          <p>
+            Penanganan demam, batuk pilek, diare, ruam kulit, dan penyakit
+            umum lainnya pada bayi dan anak.
+          </p>
+        </div>
+        <div class="service-card">
+          <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+            width="40" height="40">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M17.34 18H6.66C5.19 18 4 16.81 4 15.34V8.66C4 7.19 5.19 6 6.66 6h10.69C18.81 6 20 7.19 20 8.66v6.69C20 16.81 18.81 18 17.34 18zM6.66 4C4.08 4 2 6.08 2 8.66v6.69C2 17.92 4.08 20 6.66 20h10.69c2.58 0 4.66-2.08 4.66-4.66V8.66C22 6.08 19.92 4 17.34 4H6.66zm10.37 10.12c-.31.31-.82.31-1.13 0L12 10.24l-3.89 3.88c-.31.31-.82.31-1.13 0-.31-.31-.31-.82 0-1.13L10.87 9.1 7 5.23c-.31-.31-.31-.82 0-1.13.31-.31.82-.31 1.13 0L12 7.98l3.88-3.88c.31-.31.82-.31 1.13 0 .31.31.31.82 0 1.13L13.13 9.1l3.89 3.88c.32.31.32.82.01 1.14z" />
+          </svg>
+          <h3>Konsultasi Gizi & Laktasi</h3>
+          <p>
+            Panduan MPASI, solusi masalah menyusui, dan pemenuhan gizi optimal
+            untuk tumbuh kembang si kecil.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="informasi" class="section section-bg-gray">
+    <div class="container">
+      <h2 class="section-title">Informasi Penyakit Umum Bayi di Indonesia</h2>
+      <div class="info-carousel">
+        <button class="carousel-button prev" id="info-prev" aria-label="Informasi Sebelumnya">
+          < </button>
+            <div class="carousel-viewport">
+              <div class="info-container carousel-track">
+                <div class="info-item carousel-item">
+                  <h3>Demam pada Bayi</h3>
+                  <p>
+                    Demam seringkali merupakan respons tubuh terhadap infeksi.
+                    Kenali kapan harus waspada dan cara penanganan awal yang tepat
+                    di rumah.
+                  </p>
+                </div>
+                <div class="info-item carousel-item">
+                  <h3>Diare dan Muntah</h3>
+                  <p>
+                    Penyebab umum diare pada bayi adalah infeksi virus atau
+                    bakteri. Jaga hidrasi si kecil dan kenali tanda-tanda
+                    dehidrasi.
+                  </p>
+                </div>
+                <div class="info-item carousel-item">
+                  <h3>Batuk dan Pilek (ISPA)</h3>
+                  <p>
+                    Infeksi Saluran Pernapasan Akut (ISPA) sering terjadi.
+                    Pastikan bayi cukup istirahat dan cairan, serta waspadai
+                    gejala sesak napas.
+                  </p>
+                </div>
+                <div class="info-item carousel-item">
+                  <h3>Ruam Kulit (Ruam Popok, Biang Keringat)</h3>
+                  <p>
+                    Jaga kebersihan kulit bayi, gunakan pakaian katun longgar, dan
+                    atasi ruam popok dengan krim pelindung yang sesuai.
+                  </p>
+                </div>
+                <div class="info-item carousel-item">
+                  <h3>Infeksi Telinga (Otitis Media)</h3>
+                  <p>
+                    Bayi yang sering menarik telinga, rewel, dan demam mungkin
+                    mengalami infeksi telinga. Segera konsultasikan ke dokter.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button class="carousel-button next" id="info-next" aria-label="Informasi Berikutnya">
+              >
+            </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section" id="ajakan-bertindak">
+    <div class="container">
+      <h2>Siap Memberikan Perawatan Terbaik?</h2>
+      <p>
+        Jadwalkan konsultasi atau kunjungan Anda ke QuickKonsul hari ini,
+        atau gunakan chatbot kami untuk pertanyaan instan.
+      </p>
+      <a href="tel:+62XXXXXXXXXX" class="btn btn-primary">Telepon Kami</a>
+      <a href="/chatbot" class="btn btn-primary" style="margin-left: 10px">Coba Chatbot</a>
+    </div>
+  </section>
+
+  <section id="info-kontak" class="section section-bg-white">
+    <div class="container">
+      <h2 class="section-title">Hubungi Kami & Lokasi</h2>
+      <div class="kontak-grid">
+        <div class="kontak-detail">
+          <h3>Detail Kontak</h3>
+          <div class="kontak-item">
+            <strong><i></i> Alamat:</strong>
+            <p>
+              Jl. Contoh Klinik No. 123<br />Kelurahan Kasihan, Kabupaten
+              Bantul<br />Daerah Istimewa Yogyakarta 55184<br />Indonesia
+            </p>
+          </div>
+          <div class="kontak-item">
+            <strong><i></i> Telepon:</strong>
+            <p><a href="tel:+62XXXXXXXXXX">+62 XXXXXXXXXX</a></p>
+          </div>
+          <div class="kontak-item">
+            <strong><i></i> Email:</strong>
+            <p>
+              <a href="mailto:info@quickkonsul.co.id">info@quickkonsul.co.id</a>
+            </p>
+          </div>
+          <div class="kontak-item">
+            <strong><i></i> Jam Operasional:</strong>
+            <ul>
+              <li>Senin - Jumat: 08:00 - 20:00 WIB</li>
+              <li>Sabtu: 09:00 - 17:00 WIB</li>
+              <li>Minggu & Hari Libur: Tutup (atau sesuai jadwal)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="kontak-map">
+          <h3>Lokasi Kami</h3>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.842619516968!2d110.3221088153959!3d-7.806570094372737!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a57b4eaaaaaab%3A0x3b9f6f123e733d8b!2sKasihan%2C%20Bantul%20Regency%2C%20Special%20Region%20of%20Yogyakarta!5e0!3m2!1sen!2sid!4v1678886400000!5m2!1sen!2sid"
+            width="100%" height="380" style="border: 0" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade" title="Peta Lokasi QuickKonsul">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <p>
+          © <span id="currentYear"></span> QuickKonsul. Semua Hak
+          Dilindungi.
+        </p>
+        <div>
+          <a href="#">Kebijakan Privasi</a> |
+          <a href="#">Syarat & Ketentuan</a>
+        </div>
+      </div>
+      <div class="admin-login-footer">
+        <a href="/login">Login Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <a href="/chatbot" id="fab-chat" class="fab" rel="noopener noreferrer" aria-label="Mulai Chat Bantuan (Tab Baru)">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+      <path
+        d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 12H5v-2h14v2zm0-3H5V9h14v2zm0-3H5V6h14v2z" />
+      <path d="M0 0h24v24H0z" fill="none" />
+    </svg>
+    <span class="fab-bubble">
+      Coba Chatbot Sekarang!
+      <button class="fab-bubble-close-btn" aria-label="Tutup pesan promosi">×</button>
+    </span>
+  </a>
+
+  <script>
+    // Script sederhana untuk tahun di footer
+    document.getElementById("currentYear").textContent =
+      new Date().getFullYear();
+
+    // Script untuk highlight navigasi aktif saat scroll (opsional)
+    const sections = document.querySelectorAll("section[id], header[id]");
+    const navLinks = document.querySelectorAll(".nav-link");
+
+    window.addEventListener("scroll", () => {
+      let current = "";
+      const scrollY = window.pageYOffset;
+      const navHeight = document.querySelector(".navbar")?.offsetHeight || 70;
+
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop - navHeight - 10;
+        if (scrollY >= sectionTop) {
+          current = section.getAttribute("id");
+        }
+      });
+
+      if (
+        scrollY <
+        (document.getElementById("layanan")?.offsetTop ||
+          sections[1].offsetTop) -
+        navHeight -
+        10
+      ) {
+        current = "hero";
+      }
+
+      navLinks.forEach((link) => {
+        link.classList.remove("active");
+        if (link.getAttribute("href") === `#${current}`) {
+          link.classList.add("active");
+        }
+      });
+    });
+
+    // ===========================================
+    // === LOGIKA CAROUSEL INFORMASI PENYAKIT ===
+    // ===========================================
+    const infoTrack = document.querySelector("#informasi .carousel-track");
+    const infoItems = document.querySelectorAll("#informasi .carousel-item");
+    const infoPrevBtn = document.getElementById("info-prev");
+    const infoNextBtn = document.getElementById("info-next");
+
+    if (infoTrack && infoItems.length > 0 && infoPrevBtn && infoNextBtn) {
+      let itemWidth = calculateItemWidth();
+      let itemsPerPage = calculateItemsPerPage();
+      const totalItems = infoItems.length;
+      let currentIndex = 0;
+      let intervalId = null;
+      let interactionTimeoutId = null;
+      const autoScrollDelay = 3000;
+      const interactionPauseDelay = 10000;
+
+      function calculateItemWidth() {
+        if (infoItems.length > 0) {
+          const itemStyle = window.getComputedStyle(infoItems[0]);
+          const width = infoItems[0].offsetWidth;
+          const marginRight = parseInt(itemStyle.marginRight, 10) || 0;
+          return width + marginRight;
+        }
+        return 0;
+      }
+
+      function calculateItemsPerPage() {
+        const viewport = document.querySelector(
+          "#informasi .carousel-viewport"
+        );
+        if (!viewport) {
+          return 1;
+        }
+        const viewportWidth = viewport.offsetWidth;
+        if (!itemWidth || itemWidth <= 0) {
+          itemWidth = calculateItemWidth();
+        }
+        if (!itemWidth || itemWidth <= 0) {
+          return 1;
+        }
+        const itemsFit = viewportWidth / itemWidth;
+        return Math.max(1, Math.floor(itemsFit));
+      }
+
+      function updateCarousel(smooth = true) {
+        if (!itemWidth || itemWidth <= 0) {
+          itemWidth = calculateItemWidth();
+          if (!itemWidth || itemWidth <= 0) return;
+        }
+        const maxIndex = Math.max(0, totalItems - itemsPerPage);
+        currentIndex = Math.max(0, Math.min(currentIndex, maxIndex));
+        const offset = -currentIndex * itemWidth;
+        infoTrack.style.transition = smooth
+          ? "transform 0.5s ease-in-out"
+          : "none";
+        infoTrack.style.transform = `translateX(${offset}px)`;
+        if (totalItems <= itemsPerPage) {
+          infoPrevBtn.style.display = "none";
+          infoNextBtn.style.display = "none";
+        } else {
+          infoPrevBtn.style.display = "flex";
+          infoNextBtn.style.display = "flex";
+        }
+      }
+
+      function moveToNext() {
+        const maxIndex = Math.max(0, totalItems - itemsPerPage);
+        if (currentIndex >= maxIndex) {
+          currentIndex = 0;
+        } else {
+          currentIndex++;
+        }
+        updateCarousel();
+        resetInteractionTimer();
+      }
+      function moveToPrev() {
+        const maxIndex = Math.max(0, totalItems - itemsPerPage);
+        if (currentIndex <= 0) {
+          currentIndex = maxIndex;
+        } else {
+          currentIndex--;
+        }
+        updateCarousel();
+        resetInteractionTimer();
+      }
+      function startAutoScroll() {
+        stopAutoScroll();
+        if (totalItems > itemsPerPage) {
+          intervalId = setInterval(moveToNext, autoScrollDelay);
+        }
+      }
+      function stopAutoScroll() {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+      function resetInteractionTimer() {
+        stopAutoScroll();
+        clearTimeout(interactionTimeoutId);
+        interactionTimeoutId = setTimeout(
+          startAutoScroll,
+          interactionPauseDelay
+        );
+      }
+      infoNextBtn.addEventListener("click", moveToNext);
+      infoPrevBtn.addEventListener("click", moveToPrev);
+      window.addEventListener("resize", () => {
+        setTimeout(() => {
+          itemWidth = calculateItemWidth();
+          itemsPerPage = calculateItemsPerPage();
+          updateCarousel(false);
+          resetInteractionTimer();
+        }, 250);
+      });
+      itemWidth = calculateItemWidth();
+      itemsPerPage = calculateItemsPerPage();
+      updateCarousel(false);
+      startAutoScroll();
+    } else {
+      console.error(
+        "Carousel initialization failed: One or more elements not found."
+      );
+      if (infoPrevBtn) infoPrevBtn.style.display = "none";
+      if (infoNextBtn) infoNextBtn.style.display = "none";
+    }
+
+    // ===========================================
+    // ===       LOGIKA ANIMASI ON SCROLL      ===
+    // ===========================================
+    if ("IntersectionObserver" in window) {
+      const revealObserver = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { root: null, threshold: 0.1 }
+      );
+      document
+        .querySelectorAll(
+          "#layanan .section-title, #informasi .section-title, #info-kontak .section-title, #ajakan-bertindak h2, #ajakan-bertindak p, #ajakan-bertindak .btn, .kontak-detail, .kontak-map, #chatbot-fitur .section-title, #chatbot-fitur p, #chatbot-fitur .btn" /* Added new elements */
+        )
+        .forEach((el) => {
+          el.classList.add("reveal-on-scroll", "reveal-slide-up");
+          revealObserver.observe(el);
+        });
+      document.querySelectorAll(".service-card").forEach((el, index) => {
+        el.classList.add("reveal-on-scroll", "reveal-scale-up");
+        el.style.transitionDelay = `${index * 0.05}s`;
+        revealObserver.observe(el);
+      });
+      document.querySelectorAll(".info-carousel").forEach((el) => {
+        el.classList.add("reveal-on-scroll", "reveal-fade-in");
+        revealObserver.observe(el);
+      });
+    } else {
+      console.warn(
+        "IntersectionObserver not supported, reveal animations disabled."
+      );
+      document.querySelectorAll(".reveal-on-scroll").forEach((el) => {
+        el.style.opacity = 1;
+        el.style.transform = "none";
+      });
+    }
+
+    // ===========================================
+    // ===       LOGIKA MODE MALAM             ===
+    // ===========================================
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Function to set theme
+    function setTheme(theme) {
+      body.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    }
+
+    // Check for saved theme preference on load
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else {
+      // Default to light theme if no preference is saved
+      setTheme('light');
+    }
+
+    // Toggle theme on button click
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      if (currentTheme === 'light') {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+    });
+
+    // ===========================================
+    // ===       LOGIKA FAB BUBBLE PROMO       ===
+    // ===========================================
+    const fabBubble = document.querySelector('.fab-bubble');
+    const fabBubbleCloseBtn = document.querySelector('.fab-bubble-close-btn');
+
+    // Show FAB bubble after 3 seconds, always, unless explicitly closed by user in this *specific* page load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        fabBubble.classList.add('show-promo');
+      }, 3000); // 3 seconds delay
+    });
+
+    // Close FAB bubble when close button is clicked
+    fabBubbleCloseBtn.addEventListener('click', (event) => {
+      event.stopPropagation(); // Prevent click from bubbling to the FAB itself
+      fabBubble.classList.remove('show-promo');
+      // Removed sessionStorage.setItem('fabBubbleShown', 'true');
+      // Now, the pop-up will reappear on subsequent page loads (e.g., after navigation)
+    });
+
+    // Handle hover effect for FAB bubble (original behavior)
+    const fabChat = document.getElementById('fab-chat');
+    fabChat.addEventListener('mouseenter', () => {
+      // Only show on hover if it's not already showing as a promo
+      if (!fabBubble.classList.contains('show-promo')) {
+        fabBubble.classList.add('show');
+      }
+    });
+    fabChat.addEventListener('mouseleave', () => {
+      // Only hide on mouse leave if it's not showing as a promo
+      if (!fabBubble.classList.contains('show-promo')) {
+        fabBubble.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+
+</html>

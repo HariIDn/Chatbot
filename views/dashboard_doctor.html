@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Dokter - Klinik Sehat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background-color: #f0f2f5;
+            display: flex;
+        }
+
+        #sidebar {
+            width: 260px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease-in-out;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            background-color: #ffffff;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        #sidebar .sidebar-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        #sidebar .sidebar-header h3 {
+            font-weight: 600;
+            color: #198754;
+            /* Warna hijau untuk dokter */
+            margin-bottom: 0;
+            font-size: 1.5rem;
+        }
+
+        #sidebar .sidebar-header h3 i {
+            margin-right: 8px;
+        }
+
+        #sidebar .nav-pills {
+            flex-grow: 1;
+            padding-top: 1rem;
+        }
+
+        #sidebar .nav-link {
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 1rem;
+            border-radius: 0.5rem;
+            color: #5a6169;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.15s ease-in-out;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        #sidebar .nav-link i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+            color: #888;
+            transition: color 0.2s ease-in-out;
+        }
+
+        #sidebar .nav-link:hover {
+            background-color: #e9f5e9;
+            /* Hover hijau muda */
+            color: #198754;
+            transform: translateX(3px);
+        }
+
+        #sidebar .nav-link:hover i {
+            color: #198754;
+        }
+
+        #sidebar .nav-link.active {
+            background-color: #198754;
+            /* Warna hijau untuk dokter */
+            color: #ffffff;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(25, 135, 84, 0.3);
+        }
+
+        #sidebar .nav-link.active i {
+            color: #ffffff;
+        }
+
+        #sidebar .nav-link.logout-link {
+            /* Untuk tombol logout di sidebar utama */
+            background-color: transparent;
+            border: 1px solid #e0e0e0;
+            color: #dc3545;
+        }
+
+        #sidebar .nav-link.logout-link:hover {
+            background-color: rgba(220, 53, 69, 0.05);
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        #sidebar .nav-link.logout-link i {
+            color: #dc3545;
+        }
+
+
+        #sidebar .profile-section {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        #sidebar .profile-section strong {
+            color: #343a40;
+        }
+
+        #sidebar .profile-section .text-muted {
+            font-size: 0.85em;
+        }
+
+
+        #main-content-wrapper {
+            margin-left: 260px;
+            padding: 1.5rem;
+            transition: margin-left 0.3s ease-in-out;
+            width: calc(100% - 260px);
+            flex-grow: 1;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeInContent 0.5s ease-out forwards;
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInContent {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .page-header .text-muted {
+            font-size: 0.9rem;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            color: #495057;
+            border: none;
+            font-weight: 600;
+        }
+
+        /* Custom badge colors */
+        .badge.bg-menunggu {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        /* Kuning */
+        .badge.bg-proses {
+            background-color: #0dcaf0;
+            color: #212529;
+        }
+
+        /* Biru muda */
+        .badge.bg-selesai {
+            background-color: #198754;
+            color: #fff;
+        }
+
+        /* Hijau */
+        .badge.bg-dibatalkan {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        /* Merah */
+
+        .footer {
+            margin-top: 2rem;
+            padding: 1rem 0;
+            font-size: 0.85em;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        #sidebarCollapse {
+            display: none;
+        }
+
+        @media (max-width: 991.98px) {
+            #sidebar {
+                margin-left: -260px;
+            }
+
+            #sidebar.active {
+                margin-left: 0;
+            }
+
+            #main-content-wrapper {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            #sidebarCollapse {
+                display: block;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 1001;
+                background: #fff;
+                color: #198754;
+                border: 1px solid #198754;
+                padding: 0.375rem 0.75rem;
+                border-radius: 0.375rem;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-user-md"></i> Panel Dokter</h3>
+        </div>
+        <ul class="nav nav-pills flex-column p-2">
+            <li class="nav-item"><a href="#" class="nav-link active" data-target="dashboardSaya"><i
+                        class="fas fa-tachometer-alt fa-fw"></i> Dashboard Saya</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-target="jadwalSaya"><i
+                        class="fas fa-calendar-check fa-fw"></i> Jadwal Saya</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-target="pasienSaya"><i
+                        class="fas fa-user-injured fa-fw"></i> Pasien Saya</a></li>
+            <li class="nav-item mt-auto"><a href="#" class="nav-link logout-link" id="doctorLogoutButton"><i
+                        class="fas fa-sign-out-alt fa-fw"></i> Keluar</a></li>
+        </ul>
+        <div class="profile-section">
+            <hr class="my-2" style="border-top: 1px solid rgba(0,0,0,0.05);">
+            <div class="d-flex align-items-center">
+                <img src="https://placehold.co/40x40/198754/ffffff?text=D" alt="Dokter" id="doctorProfilePic" width="40"
+                    height="40" class="rounded-circle me-2">
+                <div>
+                    <strong id="doctorProfileName">Nama Dokter</strong><br>
+                    <small class="text-muted" id="doctorProfileEmail">email@dokter.com</small>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <button type="button" id="sidebarCollapse" class="btn d-lg-none"><i class="fas fa-bars"></i></button>
+
+    <div id="main-content-wrapper">
+        <div id="dashboardSaya" class="content-section active">
+            <div class="page-header">
+                <h1>Selamat Datang, <span id="greetingDoctorName">Dokter</span>!</h1>
+                <p class="text-muted">Ringkasan aktivitas dan informasi penting Anda.</p>
+            </div>
+            <div class="alert alert-info">
+                <h4 class="alert-heading"><i class="fas fa-info-circle"></i> Pemberitahuan</h4>
+                <p>Ini adalah halaman dashboard Anda. Anda dapat melihat jadwal dan pasien Anda melalui menu di samping.
+                </p>
+                <hr>
+                <p class="mb-0">Fitur tambahan akan segera hadir.</p>
+            </div>
+        </div>
+
+        <div id="jadwalSaya" class="content-section">
+            <div class="page-header">
+                <h1><i class="fas fa-calendar-check me-2 text-success"></i> Jadwal Saya Hari Ini</h1>
+                <p class="text-muted" id="currentDateForSchedule">Memuat tanggal...</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">Waktu</th>
+                            <th scope="col">Nama Pasien</th>
+                            <th scope="col">Jenis Kunjungan</th>
+                            <th scope="col">Detail Kunjungan</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctorScheduleTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center p-5">
+                                <div class="spinner-border text-success"></div>
+                                <p class="mt-2">Memuat...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="pasienSaya" class="content-section">
+            <div class="page-header">
+                <h1><i class="fas fa-user-injured me-2 text-primary"></i> Daftar Pasien Saya</h1>
+                <p class="text-muted">Daftar pasien yang pernah atau akan Anda tangani.</p>
+            </div>
+            <div class="mb-3">
+                <input type="text" id="searchPatientInput" class="form-control"
+                    placeholder="Cari pasien berdasarkan nama atau ID...">
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID Pasien</th>
+                            <th scope="col">Nama Pasien</th>
+                            <th scope="col">Kontak</th>
+                            <th scope="col">Kunjungan Terakhir</th>
+                            <th scope="col">Lihat Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctorPatientsTableBody">
+                        <tr>
+                            <td colspan="5" class="text-center p-5">
+                                <div class="spinner-border text-primary"></div>
+                                <p class="mt-2">Memuat...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <footer class="footer">
+            <p>&copy; <span id="currentYearDoctor"></span> Klinik Sehat. Hak Cipta Dilindungi.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <script src="/javascripts/auth.js"></script>
+
+    <script>
+        // Variabel mapping bisa diletakkan di sini jika hanya digunakan oleh halaman ini
+        const serviceTypeDisplayNames = { "bayi": "Layanan Bayi", "keluhan": "Keluhan Umum" };
+        const babyServiceDisplayNames = { "pemeriksaan_rutin": "Pemeriksaan Rutin", "imunisasi": "Imunisasi", "konsultasi_gizi": "Konsultasi Gizi" };
+        const statusColors = { "Menunggu": "bg-menunggu", "Diproses": "bg-proses", "Selesai": "bg-selesai", "Dibatalkan": "bg-dibatalkan" };
+
+
+        // Fungsi spesifik untuk Dashboard Dokter
+        function displayDoctorInfo(user) {
+            console.log("DASHBOARD DOKTER: displayDoctorInfo CALLED with user:", user);
+            if (!user) return;
+            const greetingName = document.getElementById('greetingDoctorName');
+            const profileName = document.getElementById('doctorProfileName');
+            const profileEmail = document.getElementById('doctorProfileEmail');
+            const profilePicText = user.displayName ? user.displayName.charAt(0).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : 'D');
+            const profilePic = document.getElementById('doctorProfilePic');
+
+            if (greetingName) greetingName.textContent = user.displayName || user.email.split('@')[0];
+            if (profileName) profileName.textContent = user.displayName || 'Nama Dokter';
+            if (profileEmail) profileEmail.textContent = user.email;
+            if (profilePic) {
+                profilePic.src = `https://placehold.co/40x40/198754/ffffff?text=${profilePicText}`;
+                profilePic.alt = user.displayName || user.email;
+            }
+        }
+
+        function displayCurrentDateForDoctor() {
+            const dateEl = document.getElementById('currentDateForSchedule');
+            if (dateEl) {
+                const today = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                dateEl.textContent = `Jadwal untuk hari ini, ${today.toLocaleDateString('id-ID', options)}`;
+            }
+            const currentYearEl = document.getElementById('currentYearDoctor');
+            if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+        }
+
+        async function fetchAndDisplayDoctorSchedule() {
+            console.log("DASHBOARD DOKTER: fetchAndDisplayDoctorSchedule CALLED");
+            if (!window.firestoreDB || !window.firebaseAuth || !window.firebaseAuth.currentUser) {
+                console.warn("DASHBOARD DOKTER: Firestore atau Auth belum siap/user belum login.");
+                const scheduleTableBody = document.getElementById('doctorScheduleTableBody');
+                if (scheduleTableBody) scheduleTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Layanan data atau sesi tidak valid.</td></tr>';
+                return;
+            }
+            const loggedInDoctorId = window.firebaseAuth.currentUser.uid;
+            console.log("DASHBOARD DOKTER: LoggedInDoctorId:", loggedInDoctorId);
+
+            const scheduleTableBody = document.getElementById('doctorScheduleTableBody');
+            scheduleTableBody.innerHTML = '<tr><td colspan="6" class="text-center p-4"><div class="spinner-border text-success"></div> Memuat...</td></tr>';
+
+            try {
+                const today = new Date();
+                // Set start of day to 00:00:00.000
+                const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0);
+                // Set end of day to 23:59:59.999
+                const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999);
+
+                console.log("DASHBOARD DOKTER: Querying Firestore for doctorUID:", loggedInDoctorId, "from", startOfDay, "to", endOfDay);
+
+                // Query Firestore for appointments assigned to the logged-in doctor for today
+                const querySnapshot = await window.firestoreDB.collection("janjiTemu")
+                    .where("doctorUID", "==", loggedInDoctorId)
+                    .where("appointmentTimestamp", ">=", firebase.firestore.Timestamp.fromDate(startOfDay))
+                    .where("appointmentTimestamp", "<=", firebase.firestore.Timestamp.fromDate(endOfDay))
+                    .orderBy("appointmentTimestamp", "asc") // Order by time for chronological display
+                    .get();
+
+                console.log("DASHBOARD DOKTER: Schedule snapshot.empty:", querySnapshot.empty, "size:", querySnapshot.size);
+
+                if (querySnapshot.empty) {
+                    scheduleTableBody.innerHTML = '<tr><td colspan="6" class="text-center p-4">Tidak ada jadwal untuk Anda hari ini.</td></tr>';
+                    return;
+                }
+                let scheduleHtml = "";
+                querySnapshot.forEach(doc => {
+                    const appointment = doc.data();
+                    console.log("DASHBOARD DOKTER: Processing appointment:", appointment);
+
+                    let visitDetail = "Tidak Ada Detail"; // Default value
+                    // Determine visit detail based on visitType and serviceDetails structure
+                    if (appointment.serviceDetails) {
+                        if (appointment.visitType === "bayi" && appointment.serviceDetails.type) {
+                            visitDetail = babyServiceDisplayNames[appointment.serviceDetails.type] || appointment.serviceDetails.type;
+                        } else if (appointment.visitType === "keluhan" && appointment.serviceDetails.description) {
+                            visitDetail = appointment.serviceDetails.description;
+                        }
+                    } else if (appointment.complaint) { // Fallback for older data structure if 'serviceDetails' was not always present
+                        visitDetail = appointment.complaint;
+                    }
+
+                    // Format appointment time
+                    const appointmentTime = appointment.appointmentTimestamp?.toDate().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) || appointment.appointmentTimeSlot || 'N/A';
+
+                    // Add status-based button logic
+                    let actionButtons = '';
+                    if (appointment.status === 'Menunggu' || appointment.status === 'Diproses') {
+                        actionButtons = `
+                            <button class="btn btn-sm btn-success me-1" onclick="markAppointmentAsComplete('${doc.id}')" title="Tandai Selesai">
+                                <i class="fas fa-check"></i> Selesai
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewAppointmentDetail('${doc.id}')" title="Lihat Detail">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        `;
+                    } else {
+                        actionButtons = `
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewAppointmentDetail('${doc.id}')" title="Lihat Detail">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        `;
+                    }
+
+
+                    scheduleHtml += `
+                        <tr>
+                            <td>${appointmentTime}</td>
+                            <td>${appointment.patientName || 'N/A'}</td>
+                            <td>${serviceTypeDisplayNames[appointment.visitType] || appointment.visitType || 'N/A'}</td>
+                            <td>${visitDetail}</td>
+                            <td><span class="badge ${statusColors[appointment.status] || 'bg-secondary'}">${appointment.status || 'N/A'}</span></td>
+                            <td>
+                                ${actionButtons}
+                            </td>
+                        </tr>
+                    `;
+                });
+                scheduleTableBody.innerHTML = scheduleHtml;
+            } catch (error) {
+                console.error("DASHBOARD DOKTER: Error mengambil jadwal dokter:", error);
+                scheduleTableBody.innerHTML = `<tr><td colspan="6" class="text-center text-danger p-4">Gagal memuat jadwal: ${error.message}</td></tr>`;
+            }
+        }
+
+        // New function to mark appointment as complete
+        async function markAppointmentAsComplete(appointmentId) {
+            console.log(`DASHBOARD DOKTER: Attempting to mark appointment ${appointmentId} as 'Selesai'.`);
+            if (!window.firestoreDB) {
+                Swal.fire('Error', 'Koneksi database tidak tersedia.', 'error');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Tandai Selesai?',
+                text: "Anda akan menandai janji temu ini sebagai 'Selesai'.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#198754',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Ya, Selesai!',
+                cancelButtonText: 'Batal'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const appointmentRef = window.firestoreDB.collection('janjiTemu').doc(appointmentId);
+                        await appointmentRef.update({
+                            status: 'Selesai',
+                            completedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        Swal.fire(
+                            'Selesai!',
+                            'Janji temu berhasil ditandai sebagai selesai.',
+                            'success'
+                        );
+                        // Refresh the schedule table to reflect the change
+                        fetchAndDisplayDoctorSchedule();
+                    } catch (error) {
+                        console.error("DASHBOARD DOKTER: Error updating appointment status:", error);
+                        Swal.fire(
+                            'Gagal!',
+                            `Gagal menandai janji temu sebagai selesai: ${error.message}`,
+                            'error'
+                        );
+                    }
+                }
+            });
+        }
+
+        // Enhanced function to view appointment details
+        async function viewAppointmentDetail(appointmentId) {
+            console.log(`DASHBOARD DOKTER: Fetching details for appointment ID: ${appointmentId}`);
+            if (!window.firestoreDB) {
+                Swal.fire('Error', 'Koneksi database tidak tersedia.', 'error');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Memuat Detail...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                const docRef = window.firestoreDB.collection('janjiTemu').doc(appointmentId);
+                const docSnap = await docRef.get();
+
+                if (docSnap.exists) {
+                    const appointment = docSnap.data();
+                    console.log("DASHBOARD DOKTER: Appointment details:", appointment);
+
+                    let detailContent = `
+                        <p><strong>Nama Pasien:</strong> ${appointment.patientName || 'N/A'}</p>
+                        <p><strong>Jenis Kunjungan:</strong> ${serviceTypeDisplayNames[appointment.visitType] || appointment.visitType || 'N/A'}</p>
+                    `;
+
+                    if (appointment.visitType === "bayi" && appointment.serviceDetails && appointment.serviceDetails.type) {
+                        detailContent += `<p><strong>Layanan Bayi:</strong> ${babyServiceDisplayNames[appointment.serviceDetails.type] || appointment.serviceDetails.type}</p>`;
+                    } else if (appointment.visitType === "keluhan" && appointment.serviceDetails && appointment.serviceDetails.description) {
+                        detailContent += `<p><strong>Keluhan:</strong> ${appointment.serviceDetails.description}</p>`;
+                    } else if (appointment.complaint) { // Fallback for older data structure
+                        detailContent += `<p><strong>Keluhan (lama):</strong> ${appointment.complaint}</p>`;
+                    }
+
+                    detailContent += `
+                        <p><strong>Waktu Janji Temu:</strong> ${appointment.appointmentFullDateTime || 'N/A'}</p>
+                        <p><strong>Status:</strong> <span class="badge ${statusColors[appointment.status] || 'bg-secondary'}">${appointment.status || 'N/A'}</span></p>
+                        <p><strong>Dokter:</strong> ${appointment.doctorDisplayName || 'N/A'}</p>
+                        <p><strong>Didaftarkan Pada:</strong> ${appointment.submittedAt?.toDate().toLocaleString('id-ID') || 'N/A'}</p>
+                    `;
+                    if (appointment.status === 'Selesai' && appointment.completedAt) {
+                        detailContent += `<p><strong>Selesai Pada:</strong> ${appointment.completedAt.toDate().toLocaleString('id-ID')}</p>`;
+                    }
+
+
+                    Swal.fire({
+                        title: 'Detail Janji Temu',
+                        html: detailContent,
+                        icon: 'info',
+                        confirmButtonText: 'Tutup',
+                        confirmButtonColor: '#198754',
+                    });
+
+                } else {
+                    Swal.fire('Tidak Ditemukan', 'Detail janji temu tidak ditemukan.', 'error');
+                }
+            } catch (error) {
+                console.error("DASHBOARD DOKTER: Error fetching appointment details:", error);
+                Swal.fire('Error', `Gagal memuat detail janji temu: ${error.message}`, 'error');
+            }
+        }
+
+        async function fetchAndDisplayDoctorPatients() {
+            console.log("DASHBOARD DOKTER: fetchAndDisplayDoctorPatients CALLED");
+            const patientsTableBody = document.getElementById('doctorPatientsTableBody');
+            if (!patientsTableBody || !window.firestoreDB || !window.firebaseAuth || !window.firebaseAuth.currentUser) {
+                console.warn("DASHBOARD DOKTER: Elemen tabel pasien atau Firestore/Auth belum siap.");
+                if (patientsTableBody) patientsTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Layanan data atau sesi tidak valid.</td></tr>';
+                return;
+            }
+            const loggedInDoctorId = window.firebaseAuth.currentUser.uid;
+            patientsTableBody.innerHTML = '<tr><td colspan="5" class="text-center p-4"><div class="spinner-border text-primary"></div> Memuat...</td></tr>';
+
+            try {
+                const appointmentsSnapshot = await window.firestoreDB.collection("janjiTemu")
+                    .where("doctorUID", "==", loggedInDoctorId)
+                    .get();
+                console.log("DASHBOARD DOKTER: Patients (from appointments) snapshot.empty:", appointmentsSnapshot.empty, "size:", appointmentsSnapshot.size);
+
+                if (appointmentsSnapshot.empty) {
+                    patientsTableBody.innerHTML = '<tr><td colspan="5" class="text-center p-4">Belum ada data pasien yang terkait dengan Anda.</td></tr>';
+                    return;
+                }
+                const patientsMap = new Map();
+                appointmentsSnapshot.forEach(doc => {
+                    const appt = doc.data();
+                    // Use a unique key for each patient, prioritizing patientId if available, then patientName
+                    const patientKey = appt.patientId || (appt.patientName ? appt.patientName.toLowerCase() : doc.id);
+                    if (!patientsMap.has(patientKey)) {
+                        patientsMap.set(patientKey, {
+                            id: appt.patientId || `GEN-${patientKey.substring(0, 5).toUpperCase()}`, // Generate a simple ID if not present
+                            name: appt.patientName || "Nama Tidak Ada",
+                            contact: appt.patientContact || 'N/A', // Assuming patientContact might exist in the future
+                            lastVisit: appt.appointmentTimestamp?.toDate().toLocaleDateString('id-ID') || (appt.appointmentFullDateTime ? appt.appointmentFullDateTime.split(',')[0] : 'N/A'),
+                            originalDocId: doc.id // Store original doc ID for potential future use
+                        });
+                    } else {
+                        // Update last visit if a more recent appointment is found for the same patient
+                        const existingPatient = patientsMap.get(patientKey);
+                        const currentVisitTimestamp = appt.appointmentTimestamp?.toDate();
+                        if (currentVisitTimestamp) {
+                            const existingVisitTimestamp = existingPatient.lastVisit ? new Date(existingPatient.lastVisit) : new Date(0); // Handle initial N/A or invalid dates
+                            if (currentVisitTimestamp > existingVisitTimestamp) {
+                                existingPatient.lastVisit = currentVisitTimestamp.toLocaleDateString('id-ID');
+                            }
+                        }
+                    }
+                });
+
+                let patientsHtml = "";
+                if (patientsMap.size === 0) {
+                    patientsTableBody.innerHTML = '<tr><td colspan="5" class="text-center p-4">Tidak ditemukan data pasien unik.</td></tr>';
+                    return;
+                }
+                // Sort patients by name for consistent display
+                const sortedPatients = Array.from(patientsMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+
+                sortedPatients.forEach(patient => {
+                    patientsHtml += `
+                        <tr>
+                            <td>${patient.id}</td>
+                            <td>${patient.name}</td>
+                            <td>${patient.contact}</td>
+                            <td>${patient.lastVisit}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-info" onclick="viewPatientDetail('${patient.id}', '${patient.originalDocId}')" title="Lihat Detail Pasien"><i class="fas fa-address-card"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                patientsTableBody.innerHTML = patientsHtml;
+            } catch (error) {
+                console.error("DASHBOARD DOKTER: Error mengambil data pasien dokter:", error);
+                patientsTableBody.innerHTML = `<tr><td colspan="5" class="text-center text-danger p-4">Gagal memuat data pasien: ${error.message}</td></tr>`;
+            }
+        }
+
+        function viewPatientDetail(patientId, appointmentDocId) {
+            Swal.fire('Detail Pasien', `Fungsi untuk melihat detail pasien ID: ${patientId} (dari janji temu ${appointmentDocId}) akan diimplementasikan.`, 'info');
+        }
+
+        // Fungsi ini akan dipanggil oleh auth.js atau oleh event listener klik sidebar
+        function showContent(targetId, skipDataLoad = false) {
+            console.log("DASHBOARD DOKTER: showContent CALLED with targetId:", targetId, "skipDataLoad:", skipDataLoad);
+            const sidebarLinks = document.querySelectorAll('#sidebar .nav-link');
+            const contentSections = document.querySelectorAll('#main-content-wrapper .content-section');
+
+            sidebarLinks.forEach(l => {
+                if (l.getAttribute('data-target') === targetId) {
+                    l.classList.add('active');
+                } else {
+                    l.classList.remove('active');
+                }
+            });
+            contentSections.forEach(section => {
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            if (!skipDataLoad) {
+                console.log("DASHBOARD DOKTER: Attempting to load data for targetId:", targetId);
+                if (targetId === "jadwalSaya" && typeof fetchAndDisplayDoctorSchedule === 'function') {
+                    console.log("DASHBOARD DOKTER: Calling fetchAndDisplayDoctorSchedule");
+                    fetchAndDisplayDoctorSchedule(); // Tidak perlu user.uid lagi, diambil dari currentUser
+                } else if (targetId === "pasienSaya" && typeof fetchAndDisplayDoctorPatients === 'function') {
+                    console.log("DASHBOARD DOKTER: Calling fetchAndDisplayDoctorPatients");
+                    fetchAndDisplayDoctorPatients(); // Tidak perlu user.uid lagi
+                }
+            } else {
+                console.log("DASHBOARD DOKTER: Skipping data load for targetId:", targetId);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("DASHBOARD DOKTER: DOMContentLoaded");
+            // auth.js akan menangani inisialisasi Firebase dan pemanggilan awal displayDoctorInfo & showContent
+
+            displayCurrentDateForDoctor();
+
+            const sidebarLinks = document.querySelectorAll('#sidebar .nav-link:not(.logout-link)');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarCollapseButton = document.getElementById('sidebarCollapse');
+            const doctorLogoutButton = document.getElementById('doctorLogoutButton');
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    console.log("DASHBOARD DOKTER: Sidebar link clicked, targetId:", targetId);
+                    showContent(targetId); // Ini akan memicu pemuatan data jika diperlukan
+                    window.location.hash = targetId; // Update URL hash for direct linking/refresh
+                    if (window.innerWidth < 992 && sidebar.classList.contains('active')) {
+                        sidebar.classList.remove('active'); // Close sidebar on mobile after click
+                    }
+                });
+            });
+
+            if (sidebarCollapseButton) {
+                sidebarCollapseButton.addEventListener('click', () => sidebar.classList.toggle('active'));
+            }
+
+            if (doctorLogoutButton) {
+                doctorLogoutButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    if (typeof handleLogout === 'function') { // Fungsi dari auth.js
+                        handleLogout('/login');
+                    } else {
+                        console.error("Fungsi handleLogout tidak ditemukan di auth.js.");
+                        Swal.fire('Error Sistem', 'Fungsi logout tidak tersedia.', 'error');
+                    }
+                });
+            }
+
+            const searchPatientInput = document.getElementById('searchPatientInput');
+            if (searchPatientInput) {
+                searchPatientInput.addEventListener('keyup', function () {
+                    const filter = searchPatientInput.value.toLowerCase();
+                    const rows = document.querySelectorAll('#doctorPatientsTableBody tr');
+                    rows.forEach(row => {
+                        const patientNameCol = row.cells[1];
+                        if (patientNameCol) {
+                            const patientName = patientNameCol.textContent || patientNameCol.innerText;
+                            if (patientName.toLowerCase().includes(filter)) {
+                                row.style.display = "";
+                            } else {
+                                row.style.display = "none";
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

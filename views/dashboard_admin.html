@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Klinik Sehat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background-color: #f0f2f5;
+            display: flex;
+        }
+
+        #sidebar {
+            width: 260px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease-in-out;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            background-color: #ffffff;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        #sidebar .sidebar-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        #sidebar .sidebar-header h3 {
+            font-weight: 600;
+            color: #0d6efd;
+            margin-bottom: 0;
+            font-size: 1.5rem;
+        }
+
+        #sidebar .sidebar-header h3 i {
+            margin-right: 8px;
+        }
+
+        #sidebar .nav-pills {
+            flex-grow: 1;
+            padding-top: 1rem;
+        }
+
+        #sidebar .nav-link {
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 1rem;
+            border-radius: 0.5rem;
+            color: #5a6169;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.15s ease-in-out;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        #sidebar .nav-link i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+            color: #888;
+            transition: color 0.2s ease-in-out;
+        }
+
+        #sidebar .nav-link:hover {
+            background-color: #e9ecef;
+            color: #0d6efd;
+            transform: translateX(3px);
+        }
+
+        #sidebar .nav-link:hover i {
+            color: #0d6efd;
+        }
+
+        #sidebar .nav-link.active {
+            background-color: #0d6efd;
+            color: #ffffff;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+        }
+
+        #sidebar .nav-link.active i {
+            color: #ffffff;
+        }
+
+        #sidebar .dropdown-item.logout-dropdown-item {
+            color: #dc3545;
+        }
+
+        #sidebar .dropdown-item.logout-dropdown-item:hover {
+            background-color: rgba(220, 53, 69, 0.05);
+            color: #c82333;
+        }
+
+        #sidebar .dropdown-item.logout-dropdown-item i {
+            color: #dc3545;
+        }
+
+        #sidebar .dropdown-item.logout-dropdown-item:hover i {
+            color: #c82333;
+        }
+
+        #sidebar .profile-section {
+            padding: 1rem 1.5rem;
+        }
+
+        #sidebar .profile-section strong {
+            color: #343a40;
+        }
+
+        #sidebar .profile-section .text-muted {
+            font-size: 0.85em;
+        }
+
+        #sidebar .dropdown-menu {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        #sidebar .dropdown-item {
+            color: #343a40;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        #sidebar .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #0d6efd;
+        }
+
+        #sidebar .dropdown-item i {
+            margin-right: 0.75rem;
+            width: 16px;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        #sidebar .dropdown-item:hover i {
+            color: #0d6efd;
+        }
+
+        #main-content-wrapper {
+            margin-left: 260px;
+            padding: 1.5rem;
+            transition: margin-left 0.3s ease-in-out;
+            width: calc(100% - 260px);
+            flex-grow: 1;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeInContent 0.5s ease-out forwards;
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInContent {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .page-header .text-muted {
+            font-size: 0.9rem;
+        }
+
+        .table {
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            color: #495057;
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table thead th:first-child {
+            border-top-left-radius: 0.5rem;
+        }
+
+        .table thead th:last-child {
+            border-top-right-radius: 0.5rem;
+        }
+
+        .table tbody tr {
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            border-radius: 0.5rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .table tbody td,
+        .table tbody th {
+            padding: 1rem;
+            vertical-align: middle;
+            border: none;
+            color: #6c757d;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .table tbody tr:last-child td,
+        .table tbody tr:last-child th {
+            border-bottom: none;
+        }
+
+        .table tbody tr td:first-child,
+        .table tbody tr th:first-child {
+            border-top-left-radius: 0.5rem;
+            border-bottom-left-radius: 0.5rem;
+        }
+
+        .table tbody tr td:last-child {
+            border-top-right-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+
+        .table-hover tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+            background-color: #fcfdff;
+        }
+
+        .badge {
+            padding: 0.4em 0.7em;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 0.3rem;
+            letter-spacing: 0.3px;
+        }
+
+        .status-select {
+            min-width: 130px;
+            font-size: 0.85rem;
+        }
+
+        .badge.bg-menunggu {
+            background-color: #ffc107 !important;
+            color: #343a40 !important;
+        }
+
+        .badge.bg-proses {
+            background-color: #0dcaf0 !important;
+            color: #ffffff !important;
+        }
+
+        .badge.bg-selesai {
+            background-color: #198754 !important;
+            color: #ffffff !important;
+        }
+
+        .badge.bg-dibatalkan {
+            background-color: #dc3545 !important;
+            color: #ffffff !important;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            padding: 1rem 0;
+            font-size: 0.85em;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        #sidebarCollapse {
+            display: none;
+        }
+
+        @media (max-width: 991.98px) {
+            #sidebar {
+                margin-left: -260px;
+            }
+
+            #sidebar.active {
+                margin-left: 0;
+            }
+
+            #main-content-wrapper {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            #sidebarCollapse {
+                display: block;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 1001;
+                background: #fff;
+                color: #0d6efd;
+                border: 1px solid #0d6efd;
+                padding: 0.375rem 0.75rem;
+                border-radius: 0.375rem;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        #appointmentsTableBody tr,
+        #doctorAccountsTableBody tr {
+            animation: fadeInUpRow 0.4s ease-out forwards;
+        }
+
+        #appointmentsTableBody tr:nth-child(1),
+        #doctorAccountsTableBody tr:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        #appointmentsTableBody tr:nth-child(2),
+        #doctorAccountsTableBody tr:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        @keyframes fadeInUpRow {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .action-buttons .btn {
+            margin-right: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .action-buttons .btn i {
+            margin-right: 0.25rem;
+        }
+
+        #addDoctorModal .form-label {
+            font-weight: 500;
+        }
+
+        .schedule-editor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .day-column {
+            border: 1px solid #e0e0e0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+        }
+
+        .day-column h5 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #343a40;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+
+        .time-slot-item {
+            display: flex;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #e9ecef;
+        }
+
+        .time-slot-item:last-child {
+            border-bottom: none;
+        }
+
+        .time-slot-item label {
+            font-size: 0.9rem;
+            color: #495057;
+        }
+
+        .time-slot-item .form-check-input {
+            transform: scale(1.1);
+            cursor: pointer;
+            /* Tambahkan border agar terlihat saat tidak dicentang */
+            border: 1px solid #ced4da;
+            /* Pastikan latar belakangnya putih agar kontras */
+            background-color: #fff;
+        }
+
+        /* Gaya untuk checkbox yang dicentang (opsional, untuk memastikan warna centang tetap terlihat) */
+        .time-slot-item .form-check-input:checked {
+            background-color: #0d6efd;
+            /* Warna biru Bootstrap default */
+            border-color: #0d6efd;
+        }
+    </style>
+</head>
+
+<body>
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-shield-alt"></i> Panel Admin</h3>
+        </div>
+        <ul class="nav nav-pills flex-column p-2">
+            <li class="nav-item"><a href="#" class="nav-link active" data-target="daftarPemeriksaan"><i
+                        class="fas fa-clipboard-list fa-fw"></i> Daftar Pemeriksaan</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-target="statusPemeriksaan"><i
+                        class="fas fa-tasks fa-fw"></i> Status Pemeriksaan</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-target="jadwalDokter"><i
+                        class="fas fa-calendar-alt fa-fw"></i> Jadwal Dokter (Global)</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-target="aturJadwalDokter"><i
+                        class="fas fa-user-clock fa-fw"></i> Atur Jadwal Dokter</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-target="dataPasien"><i
+                        class="fas fa-user-injured fa-fw"></i> Data Pasien (Semua)</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-target="kelolaDokter"><i
+                        class="fas fa-user-md fa-fw"></i> Kelola Akun Dokter</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" data-target="pengaturanSistem"><i
+                        class="fas fa-cogs fa-fw"></i> Pengaturan Sistem</a></li>
+        </ul>
+        <div class="profile-section mt-auto">
+            <hr class="my-2" style="border-top: 1px solid rgba(0,0,0,0.05);">
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle"
+                    id="dropdownUserAdmin" data-bs-toggle="dropdown" aria-expanded="false" style="color: #343a40;">
+                    <img src="https://placehold.co/32x32/0d6efd/ffffff?text=A" alt="Admin" id="adminProfilePic"
+                        width="32" height="32" class="rounded-circle me-2">
+                    <strong id="adminProfileName">Admin Klinik</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUserAdmin">
+                    <li><a class="dropdown-item" href="#" id="adminChangePasswordLink"><i class="fas fa-key"></i> Ubah
+                            Password Saya</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item logout-dropdown-item" href="#" id="adminLogoutButton"><i
+                                class="fas fa-sign-out-alt"></i> Keluar</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <button type="button" id="sidebarCollapse" class="btn d-lg-none"><i class="fas fa-bars"></i></button>
+
+    <div id="main-content-wrapper">
+        <div id="infoAdmin" class="content-section">
+            <div class="page-header">
+                <h1>Selamat Datang, <span id="greetingAdminName">Admin</span>!</h1>
+                <p class="text-muted">Panel Kontrol Klinik Sehat.</p>
+            </div>
+            <div class="alert alert-primary">
+                <h4 class="alert-heading"><i class="fas fa-info-circle"></i> Informasi</h4>
+                <p>Gunakan menu di samping untuk mengelola berbagai aspek klinik.</p>
+            </div>
+        </div>
+
+        <div id="daftarPemeriksaan" class="content-section active">
+            <div class="page-header">
+                <h1><i class="fas fa-clipboard-list me-2 text-primary"></i> Daftar Pemeriksaan</h1>
+                <p class="text-muted" id="currentDatePemeriksaan">Memuat tanggal...</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Nama Pasien</th>
+                            <th scope="col">Jadwal Periksa</th>
+                            <th scope="col">Kunjungan</th>
+                            <th scope="col">Detail</th>
+                            <th scope="col">Dokter</th>
+                            <th scope="col" style="min-width: 150px;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentsTableBody">
+                        <tr>
+                            <td colspan="7" class="text-center p-5">
+                                <div class="spinner-border text-primary"></div>
+                                <p class="mt-2">Memuat...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="statusPemeriksaan" class="content-section">
+            <div class="page-header">
+                <h1><i class="fas fa-tasks me-2 text-info"></i> Status Pemeriksaan</h1>
+                <p class="text-muted">Pantau antrian dan status pemeriksaan pasien.</p>
+            </div>
+            <p>Fitur status pemeriksaan akan segera hadir.</p>
+        </div>
+
+        <div id="jadwalDokter" class="content-section">
+            <div class="page-header">
+                <h1><i class="fas fa-calendar-alt me-2 text-success"></i> Jadwal Praktik Dokter (Global)</h1>
+                <p class="text-muted">Lihat jadwal semua dokter.</p>
+            </div>
+            <p>Fitur untuk menampilkan semua jadwal dokter akan ada di sini.</p>
+        </div>
+
+        <div id="aturJadwalDokter" class="content-section">
+            <div class="page-header">
+                <h1><i class="fas fa-user-clock me-2 text-info"></i> Atur Jadwal Dokter</h1>
+                <p class="text-muted">Pilih dokter dan atur ketersediaan jadwal mingguan mereka.</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="selectDoctorForSchedule" class="form-label">Pilih Dokter:</label>
+                    <select class="form-select" id="selectDoctorForSchedule">
+                        <option selected disabled value="">-- Pilih Dokter --</option>
+                    </select>
+                </div>
+            </div>
+            <div id="scheduleEditorContainer" class="mt-3" style="display: none;">
+                <h4 id="editingDoctorName" class="mb-3">Mengatur Jadwal untuk: <span class="fw-bold"></span></h4>
+                <div class="schedule-editor-grid">
+                </div>
+                <button type="button" id="saveDoctorScheduleButton" class="btn btn-success mt-4">
+                    <i class="fas fa-save me-1"></i> Simpan Jadwal Dokter
+                </button>
+            </div>
+            <div id="scheduleLoadingMessage" class="alert alert-light text-center mt-3" style="display: none;">
+                <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                Memuat jadwal dokter...
+            </div>
+        </div>
+
+        <div id="dataPasien" class="content-section">
+            <div class="page-header">
+                <h1><i class="fas fa-users me-2 text-warning"></i> Manajemen Data Pasien (Semua)</h1>
+                <p class="text-muted">Kelola dan cari data rekam medis semua pasien.</p>
+            </div>
+            <p>Fitur data semua pasien akan segera hadir.</p>
+        </div>
+
+        <div id="kelolaDokter" class="content-section">
+            <div class="page-header d-flex justify-content-between align-items-center">
+                <h1><i class="fas fa-user-md me-2 text-purple"></i> Kelola Akun Dokter</h1>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDoctorModal"><i
+                        class="fas fa-user-plus me-1"></i> Tambah Akun Dokter</button>
+            </div>
+            <p class="text-muted">Kelola akun dokter yang terdaftar di sistem.</p>
+            <div class="alert alert-info small"><strong><i class="fas fa-info-circle"></i> Catatan:</strong> Admin dapat
+                membuat, melihat daftar, mengaktifkan/menonaktifkan, mereset password, dan menghapus akun dokter.</div>
+            <div class="table-responsive mt-3">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Nama Dokter</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">UID</th>
+                            <th scope="col">Status Akun</th>
+                            <th scope="col" style="min-width: 280px;">Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctorAccountsTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center p-5">
+                                <div class="spinner-border text-primary"></div>
+                                <p class="mt-2">Memuat...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="pengaturanSistem" class="content-section">
+            <div class="page-header">
+                <h1><i class="fas fa-cogs me-2 text-secondary"></i> Pengaturan Sistem</h1>
+            </div>
+            <p>Fitur pengaturan sistem akan tersedia di sini.</p>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; <span id="currentYearAdmin"></span> Klinik Sehat. Hak Cipta Dilindungi.</p>
+        </footer>
+    </div>
+
+    <div class="modal fade" id="addDoctorModal" tabindex="-1" aria-labelledby="addDoctorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDoctorModalLabel"><i class="fas fa-user-plus me-2"></i>Tambah Akun
+                        Dokter Baru</h5><button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addDoctorForm">
+                        <div class="mb-3"><label for="newDoctorDisplayName" class="form-label">Nama Lengkap Dokter <span
+                                    class="text-muted">(Opsional)</span></label><input type="text" class="form-control"
+                                id="newDoctorDisplayName"></div>
+                        <div class="mb-3"><label for="newDoctorEmail" class="form-label">Email Dokter <span
+                                    class="text-danger">*</span></label><input type="email" class="form-control"
+                                id="newDoctorEmail" required></div>
+                        <div class="mb-3"><label for="newDoctorPassword" class="form-label">Password Awal <span
+                                    class="text-danger">*</span></label><input type="password" class="form-control"
+                                id="newDoctorPassword" required>
+                            <div class="form-text">Minimal 6 karakter.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100"><i
+                                class="fas fa-plus-circle me-1"></i>Tambah Dokter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="/javascripts/auth.js"></script>
+    <script>
+        // Mapping untuk tampilan janji temu
+        const doctorDisplayNames = {
+            "dr_andi": "Dr. Andi Saputra", "dr_budi": "Dr. Budi Santoso",
+            "dr_citra": "Dr. Citra Lestari", "dr_dewi": "Dr. Dewi Anggraini"
+            // Anda mungkin ingin mengisi ini secara dinamis juga atau mengambil dari data dokter di Firestore
+        };
+        const serviceTypeDisplayNames = { "bayi": "Layanan Bayi", "keluhan": "Keluhan Umum" };
+        const babyServiceDisplayNames = { "pemeriksaan_rutin": "Pemeriksaan Rutin", "imunisasi": "Imunisasi", "konsultasi_gizi": "Konsultasi Gizi" };
+        const statusColors = { "Menunggu": "bg-menunggu", "Diproses": "bg-proses", "Selesai": "bg-selesai", "Dibatalkan": "bg-dibatalkan" };
+
+        // Fungsi untuk mengambil dan menampilkan SEMUA janji temu (untuk Admin)
+        async function fetchAndDisplayAppointments() {
+            console.log("ADMIN DASHBOARD: fetchAndDisplayAppointments CALLED");
+            if (!window.firestoreDB) {
+                console.warn("ADMIN DASHBOARD: window.firestoreDB belum tersedia. Fungsi akan dihentikan.");
+                const appointmentsTableBody = document.getElementById('appointmentsTableBody');
+                if (appointmentsTableBody) appointmentsTableBody.innerHTML = '<tr><td colspan="7" class="text-center p-5">Layanan database belum siap. Silakan coba muat ulang.</td></tr>';
+                return;
+            }
+            console.log("ADMIN DASHBOARD: window.firestoreDB is available:", window.firestoreDB);
+
+            const appointmentsTableBody = document.getElementById('appointmentsTableBody');
+            if (!appointmentsTableBody) {
+                console.error("ADMIN DASHBOARD: Element #appointmentsTableBody tidak ditemukan!");
+                return;
+            }
+            appointmentsTableBody.innerHTML = '<tr><td colspan="7" class="text-center p-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Memuat data janji temu...</p></td></tr>';
+
+            try {
+                const appointmentsCollection = window.firestoreDB.collection("janjiTemu").orderBy("submittedAt", "desc");
+                console.log("ADMIN DASHBOARD: Listening to appointmentsCollection...");
+                appointmentsCollection.onSnapshot(snapshot => {
+                    console.log("ADMIN DASHBOARD: Snapshot received. Empty:", snapshot.empty, "Size:", snapshot.size);
+                    if (snapshot.empty) {
+                        appointmentsTableBody.innerHTML = '<tr><td colspan="7" class="text-center p-4">Belum ada data janji temu.</td></tr>';
+                        return;
+                    }
+                    let appointmentsHtml = "";
+                    let counter = 1;
+                    snapshot.forEach(doc => {
+                        const appointment = doc.data();
+                        const docId = doc.id;
+                        let visitDetail = "N/A";
+                        if (appointment.serviceDetails) {
+                            if (appointment.visitType === "bayi" && appointment.serviceDetails.type) {
+                                visitDetail = babyServiceDisplayNames[appointment.serviceDetails.type] || appointment.serviceDetails.type;
+                            } else if (appointment.visitType === "keluhan" && appointment.serviceDetails.description) {
+                                visitDetail = appointment.serviceDetails.description;
+                            }
+                        } else if (appointment.visitType === "keluhan" && appointment.complaint) {
+                            visitDetail = appointment.complaint;
+                        }
+                        let displayDateTime = appointment.appointmentFullDateTime || `${appointment.appointmentDayName || ''}, ${appointment.appointmentTimeSlot || ''}`.replace(/^, |, $/g, '');
+
+                        // Menggunakan doctorDisplayName dari data janji temu jika ada, atau fallback
+                        let doctorName = appointment.doctorDisplayName || doctorDisplayNames[appointment.doctorUID] || appointment.doctorUID || 'N/A';
+                        if (appointment.doctor && !appointment.doctorDisplayName && !doctorDisplayNames[appointment.doctorUID]) {
+                            // Jika ada field 'doctor' lama (seperti 'dr_andi') dan tidak ada di mapping modern
+                            doctorName = doctorDisplayNames[appointment.doctor] || appointment.doctor;
+                        }
+
+
+                        appointmentsHtml += `
+                            <tr data-id="${docId}">
+                                <th scope="row">${counter++}</th>
+                                <td>${appointment.patientName || 'N/A'}</td>
+                                <td>${displayDateTime || 'N/A'}</td>
+                                <td>${serviceTypeDisplayNames[appointment.visitType] || appointment.visitType || 'N/A'}</td>
+                                <td>${visitDetail}</td> 
+                                <td>${doctorName}</td>
+                                <td>
+                                    <select class="form-select form-select-sm status-select" data-doc-id="${docId}" onchange="updateAppointmentStatus(this, '${appointment.status}')">
+                                        <option value="Menunggu" ${appointment.status === "Menunggu" ? "selected" : ""}>Menunggu</option>
+                                        <option value="Diproses" ${appointment.status === "Diproses" ? "selected" : ""}>Diproses</option>
+                                        <option value="Selesai" ${appointment.status === "Selesai" ? "selected" : ""}>Selesai</option>
+                                        <option value="Dibatalkan" ${appointment.status === "Dibatalkan" ? "selected" : ""}>Dibatalkan</option>
+                                    </select>
+                                    <span class="badge mt-1 ${statusColors[appointment.status] || 'bg-secondary'}">${appointment.status || 'N/A'}</span>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    console.log("ADMIN DASHBOARD: Final appointmentsHtml TO BE RENDERED:", appointmentsHtml);
+                    appointmentsTableBody.innerHTML = appointmentsHtml;
+                }, error => {
+                    console.error("ADMIN DASHBOARD: Error mengambil data janji temu (real-time): ", error);
+                    appointmentsTableBody.innerHTML = '<tr><td colspan="7" class="text-center text-danger p-4">Gagal memuat pembaruan data janji temu.</td></tr>';
+                });
+            } catch (error) {
+                console.error("ADMIN DASHBOARD: Error menyiapkan listener janji temu: ", error);
+                appointmentsTableBody.innerHTML = '<tr><td colspan="7" class="text-center text-danger p-4">Terjadi kesalahan saat menyiapkan pendengar data.</td></tr>';
+            }
+        }
+
+        async function updateAppointmentStatus(selectElement, oldStatusParam) {
+            if (!window.firestoreDB) { Swal.fire('Error Database', 'Koneksi database belum siap.', 'error'); return; }
+            const docId = selectElement.dataset.docId;
+            const newStatus = selectElement.value;
+            const oldStatus = oldStatusParam || selectElement.closest('tr').querySelector('.badge').textContent.trim();
+            Swal.fire({
+                title: 'Konfirmasi Perubahan Status',
+                text: `Ubah status dari "${oldStatus}" menjadi "${newStatus}"?`,
+                icon: 'question', showCancelButton: true, confirmButtonText: 'Ya, Ubah!', cancelButtonText: 'Batal',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'Memperbarui...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+                    try {
+                        await window.firestoreDB.collection("janjiTemu").doc(docId).update({ status: newStatus });
+                        Swal.fire('Berhasil!', 'Status janji temu diperbarui.', 'success');
+                    } catch (error) {
+                        Swal.fire('Gagal!', 'Tidak dapat memperbarui status.', 'error');
+                        selectElement.value = oldStatus;
+                    }
+                } else {
+                    selectElement.value = oldStatus;
+                }
+            });
+        }
+
+        function displayAdminInfo(user) {
+            console.log("ADMIN DASHBOARD: displayAdminInfo CALLED with user:", user);
+            if (!user) return;
+            const greetingName = document.getElementById('greetingAdminName');
+            const profileName = document.getElementById('adminProfileName');
+            const profilePicText = user.displayName ? user.displayName.charAt(0).toUpperCase() : (user.email ? user.email.charAt(0).toUpperCase() : 'A');
+            const profilePic = document.getElementById('adminProfilePic');
+            if (greetingName) greetingName.textContent = user.displayName || user.email.split('@')[0];
+            if (profileName) profileName.textContent = user.displayName || 'Admin Klinik';
+            if (profilePic) {
+                profilePic.src = `https://placehold.co/32x32/0d6efd/ffffff?text=${profilePicText}`;
+                profilePic.alt = user.displayName || user.email;
+            }
+        }
+
+        const daysOrder = ["senin", "selasa", "rabu", "kamis", "jumat", "sabtu"];
+        const dayDisplayNames = { senin: "Senin", selasa: "Selasa", rabu: "Rabu", kamis: "Kamis", jumat: "Jumat", sabtu: "Sabtu" };
+        function generateTimeSlotsForDay(dayKey) {
+            if (dayKey === "jumat" || dayKey === "sabtu") {
+                return generateTimeSlots(9, 15);
+            }
+            return generateTimeSlots(9, 17);
+        }
+        function generateTimeSlots(startHour, endHour, intervalMinutes = 60) {
+            const slots = [];
+            for (let h = startHour; h < endHour; h++) {
+                const start = `${String(h).padStart(2, '0')}:00`;
+                const end = `${String(h + 1).padStart(2, '0')}:00`;
+                slots.push(`${start} - ${end}`);
+            }
+            return slots;
+        }
+
+        async function populateDoctorScheduleSelect() {
+            console.log("ADMIN DASHBOARD: populateDoctorScheduleSelect CALLED");
+            const selectElement = document.getElementById('selectDoctorForSchedule');
+            if (!selectElement) { console.error("Element #selectDoctorForSchedule tidak ditemukan"); return; }
+
+            if (!window.firebaseAuth || !window.firebaseAuth.currentUser) {
+                console.warn("ADMIN DASHBOARD: Admin belum login atau firebaseAuth belum siap.");
+                selectElement.innerHTML = '<option value="">Gagal memuat dokter (auth error)</option>';
+                return;
+            }
+
+            selectElement.innerHTML = '<option value="">Memuat dokter...</option>';
+            try {
+                const adminUser = window.firebaseAuth.currentUser;
+                const idToken = await adminUser.getIdToken();
+                const response = await fetch('/api/admin/list-doctors', {
+                    headers: { 'Authorization': `Bearer ${idToken}` }
+                });
+                if (!response.ok) throw new Error('Gagal mengambil daftar dokter dari API');
+
+                const result = await response.json();
+                if (result.success && result.users) {
+                    selectElement.innerHTML = '<option selected disabled value="">-- Pilih Dokter --</option>';
+                    result.users.forEach(doctor => {
+                        if (doctor.customClaims && doctor.customClaims.role === 'doctor' && !doctor.disabled) {
+                            const option = document.createElement('option');
+                            option.value = doctor.uid;
+                            option.textContent = doctor.displayName || doctor.email;
+                            selectElement.appendChild(option);
+                        }
+                    });
+                    if (selectElement.options.length <= 1) {
+                        selectElement.innerHTML = '<option value="">Tidak ada dokter aktif</option>';
+                    }
+                } else {
+                    selectElement.innerHTML = '<option value="">Tidak ada dokter terdaftar</option>';
+                }
+            } catch (error) {
+                console.error("Error populating doctor select for schedule:", error);
+                selectElement.innerHTML = '<option value="">Gagal memuat dokter</option>';
+            }
+        }
+
+        function renderScheduleEditor(doctorId, doctorName, existingScheduleData = {}) {
+            console.log("ADMIN DASHBOARD: renderScheduleEditor for", doctorName, "Existing schedule:", existingScheduleData);
+            const editorContainer = document.getElementById('scheduleEditorContainer');
+            const scheduleGrid = editorContainer.querySelector('.schedule-editor-grid');
+            const editingDoctorNameEl = document.getElementById('editingDoctorName').querySelector('span');
+
+            if (!scheduleGrid || !editingDoctorNameEl) { console.error("Elemen editor jadwal tidak ditemukan."); return; }
+
+            editingDoctorNameEl.textContent = doctorName;
+            scheduleGrid.innerHTML = '';
+
+            daysOrder.forEach(dayKey => {
+                const dayName = dayDisplayNames[dayKey];
+                const dayColumn = document.createElement('div');
+                dayColumn.classList.add('day-column');
+                dayColumn.innerHTML = `<h5>${dayName}</h5>`;
+
+                const slots = generateTimeSlotsForDay(dayKey);
+                slots.forEach(slot => {
+                    const slotId = `${doctorId}-${dayKey}-${slot.replace(/\s|:/g, '')}`;
+                    const isAvailable = existingScheduleData[dayKey] && existingScheduleData[dayKey][slot] === 'available';
+
+                    const slotDiv = document.createElement('div');
+                    slotDiv.classList.add('time-slot-item', 'form-check');
+                    slotDiv.innerHTML = `
+                        <input class="form-check-input schedule-checkbox" type="checkbox" id="${slotId}" data-day="${dayKey}" data-slot="${slot}" ${isAvailable ? 'checked' : ''}>
+                        <label class="form-check-label" for="${slotId}">${slot}</label>
+                    `;
+                    dayColumn.appendChild(slotDiv);
+                });
+                scheduleGrid.appendChild(dayColumn);
+            });
+            editorContainer.style.display = 'block';
+        }
+
+        async function loadAndDisplayDoctorSchedule(doctorId, doctorName) {
+            const editorContainer = document.getElementById('scheduleEditorContainer');
+            const loadingMessage = document.getElementById('scheduleLoadingMessage');
+
+            editorContainer.style.display = 'none';
+            if (loadingMessage) loadingMessage.style.display = 'block';
+
+            console.log("ADMIN DASHBOARD: loadAndDisplayDoctorSchedule for doctorId:", doctorId);
+            if (!window.firebaseAuth || !window.firebaseAuth.currentUser) {
+                Swal.fire("Error", "Sesi admin tidak valid.", "error");
+                if (loadingMessage) loadingMessage.style.display = 'none';
+                return;
+            }
+
+            try {
+                const adminUser = window.firebaseAuth.currentUser;
+                const idToken = await adminUser.getIdToken();
+                const response = await fetch(`/api/admin/doctor-schedule/${doctorId}`, {
+                    headers: { 'Authorization': `Bearer ${idToken}` }
+                });
+
+                let scheduleToRender = {};
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success && result.schedule && result.schedule.schedules) {
+                        scheduleToRender = result.schedule.schedules;
+                        console.log("ADMIN DASHBOARD: Jadwal diterima dari API:", scheduleToRender);
+                    } else if (response.status !== 404) {
+                        console.warn("ADMIN DASHBOARD: Respons API jadwal tidak sukses atau format salah:", result);
+                    }
+                } else if (response.status === 404) {
+                    console.log("ADMIN DASHBOARD: Jadwal belum ada untuk dokter", doctorId, "(404). Akan menggunakan editor default.");
+                } else {
+                    throw new Error(`Gagal memuat jadwal dokter: ${response.statusText} (Status: ${response.status})`);
+                }
+                renderScheduleEditor(doctorId, doctorName, scheduleToRender);
+            } catch (error) {
+                console.error("Error loading doctor schedule:", error);
+                Swal.fire("Error", `Gagal memuat jadwal dokter: ${error.message}`, "error");
+                renderScheduleEditor(doctorId, doctorName, {});
+            } finally {
+                if (loadingMessage) loadingMessage.style.display = 'none';
+            }
+        }
+
+        async function saveDoctorSchedule() {
+            const selectedDoctorId = document.getElementById('selectDoctorForSchedule').value;
+            if (!selectedDoctorId) {
+                Swal.fire("Peringatan", "Silakan pilih dokter terlebih dahulu.", "warning");
+                return;
+            }
+            if (!window.firebaseAuth || !window.firebaseAuth.currentUser) {
+                Swal.fire("Error", "Sesi admin tidak valid.", "error");
+                return;
+            }
+
+            const scheduleDataToSave = { schedules: {} };
+            document.querySelectorAll('#scheduleEditorContainer .schedule-checkbox').forEach(checkbox => {
+                const day = checkbox.dataset.day;
+                const slot = checkbox.dataset.slot;
+                if (!scheduleDataToSave.schedules[day]) {
+                    scheduleDataToSave.schedules[day] = {};
+                }
+                scheduleDataToSave.schedules[day][slot] = checkbox.checked ? 'available' : 'unavailable';
+            });
+
+            console.log("ADMIN DASHBOARD: Menyimpan jadwal untuk dokter:", selectedDoctorId, scheduleDataToSave);
+            Swal.fire({ title: 'Menyimpan Jadwal...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            try {
+                const adminUser = window.firebaseAuth.currentUser;
+                const idToken = await adminUser.getIdToken();
+                const response = await fetch(`/api/admin/doctor-schedule/${selectedDoctorId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+                    body: JSON.stringify(scheduleDataToSave)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Gagal menyimpan jadwal: Server merespons ${response.status}`);
+                }
+                Swal.fire("Berhasil!", "Jadwal dokter telah berhasil disimpan.", "success");
+            } catch (error) {
+                console.error("Error saving doctor schedule:", error);
+                Swal.fire("Gagal!", `Tidak dapat menyimpan jadwal: ${error.message}`, "error");
+            }
+        }
+
+        function showContent(targetId, skipDataLoad = false) {
+            console.log("ADMIN DASHBOARD: showContent CALLED with targetId:", targetId, "skipDataLoad:", skipDataLoad);
+            const sidebarLinks = document.querySelectorAll('#sidebar .nav-link');
+            const contentSections = document.querySelectorAll('#main-content-wrapper .content-section');
+
+            sidebarLinks.forEach(l => {
+                if (l.getAttribute('data-target') === targetId) {
+                    l.classList.add('active');
+                } else {
+                    l.classList.remove('active');
+                }
+            });
+            contentSections.forEach(section => {
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            if (!skipDataLoad) {
+                console.log("ADMIN DASHBOARD: Attempting to load data for targetId:", targetId);
+                if (targetId === "daftarPemeriksaan" && typeof fetchAndDisplayAppointments === 'function') {
+                    fetchAndDisplayAppointments();
+                } else if (targetId === "kelolaDokter" && typeof loadDoctorAccounts === 'function') {
+                    if (window.firebaseAuth && window.firebaseAuth.currentUser) { loadDoctorAccounts(); }
+                } else if (targetId === "aturJadwalDokter" && typeof populateDoctorScheduleSelect === 'function') {
+                    populateDoctorScheduleSelect();
+                    const editorContainer = document.getElementById('scheduleEditorContainer');
+                    if (editorContainer) editorContainer.style.display = 'none';
+                }
+            } else {
+                console.log("ADMIN DASHBOARD: Skipping data load for targetId:", targetId);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("ADMIN DASHBOARD: DOMContentLoaded");
+            const sidebarLinks = document.querySelectorAll('#sidebar .nav-link');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarCollapseButton = document.getElementById('sidebarCollapse');
+            const adminLogoutButton = document.getElementById('adminLogoutButton');
+            const currentDatePemeriksaanEl = document.getElementById('currentDatePemeriksaan');
+            const currentYearAdminEl = document.getElementById('currentYearAdmin');
+            const selectDoctorForScheduleEl = document.getElementById('selectDoctorForSchedule');
+            const saveDoctorScheduleButtonEl = document.getElementById('saveDoctorScheduleButton');
+
+            if (currentDatePemeriksaanEl) {
+                const today = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                currentDatePemeriksaanEl.textContent = today.toLocaleDateString('id-ID', options);
+            }
+            if (currentYearAdminEl) currentYearAdminEl.textContent = new Date().getFullYear();
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    console.log("ADMIN DASHBOARD: Sidebar link clicked, targetId:", targetId);
+                    showContent(targetId);
+                    window.location.hash = targetId;
+                    if (window.innerWidth < 992 && sidebar.classList.contains('active')) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            });
+
+            if (sidebarCollapseButton) {
+                sidebarCollapseButton.addEventListener('click', () => sidebar.classList.toggle('active'));
+            }
+
+            if (adminLogoutButton) {
+                adminLogoutButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    if (typeof handleLogout === 'function') {
+                        handleLogout('/login');
+                    } else {
+                        console.error("Fungsi handleLogout tidak ditemukan di auth.js.");
+                    }
+                });
+            }
+
+            const addDoctorForm = document.getElementById('addDoctorForm');
+            if (addDoctorForm) {
+                addDoctorForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    if (typeof handleAddDoctor === 'function') {
+                        handleAddDoctor();
+                    } else {
+                        console.error("Fungsi handleAddDoctor tidak ditemukan di auth.js.");
+                    }
+                });
+            }
+
+            const adminChangePasswordLink = document.getElementById('adminChangePasswordLink');
+            if (adminChangePasswordLink) {
+                adminChangePasswordLink.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    if (typeof handleAdminChangePassword === 'function') {
+                        handleAdminChangePassword();
+                    } else {
+                        Swal.fire('Segera Hadir', 'Fitur ubah password untuk admin akan segera tersedia.', 'info');
+                    }
+                });
+            }
+
+            if (selectDoctorForScheduleEl) {
+                selectDoctorForScheduleEl.addEventListener('change', function () {
+                    const selectedDoctorId = this.value;
+                    const selectedDoctorName = this.options[this.selectedIndex].text;
+                    if (selectedDoctorId) {
+                        loadAndDisplayDoctorSchedule(selectedDoctorId, selectedDoctorName);
+                    } else {
+                        const editorContainer = document.getElementById('scheduleEditorContainer');
+                        if (editorContainer) editorContainer.style.display = 'none';
+                    }
+                });
+            }
+
+            if (saveDoctorScheduleButtonEl) {
+                saveDoctorScheduleButtonEl.addEventListener('click', saveDoctorSchedule);
+            }
+        });
+    </script>
+</body>
+
+</html>

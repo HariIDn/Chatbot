@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulir Pendaftaran Pasien</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <style>
+    /* CSS Anda tetap sama */
+    body {
+      font-family: "Inter", sans-serif;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .custom-radio input[type="radio"] {
+      display: none;
+    }
+
+    .custom-radio label {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-right: 0.5rem;
+      background-color: white;
+      color: #374151;
+    }
+
+    .custom-radio input[type="radio"]:checked+label {
+      background-color: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+      box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5), 0 2px 4px -1px rgba(59, 130, 246, 0.5);
+    }
+
+    .custom-radio label:hover {
+      background-color: #eff6ff;
+      border-color: #93c5fd;
+    }
+
+    .submit-button {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .submit-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.2);
+    }
+
+    .submit-button:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .form-container {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .form-container {
+        padding: 2rem;
+      }
+    }
+
+    .form-card {
+      background-color: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-card:hover {
+      transform: scale(1.01);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-header {
+      background-color: #3b82f6;
+      color: white;
+      padding: 1.5rem;
+      border-top-left-radius: 0.75rem;
+      border-top-right-radius: 0.75rem;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      outline: none;
+    }
+
+    .selectable-card {
+      padding: 0.75rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      text-align: center;
+      font-weight: 500;
+      background-color: white;
+    }
+
+    .selectable-card:hover:not(.disabled) {
+      border-color: #3b82f6;
+      color: #3b82f6;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .selectable-card.selected {
+      background-color: #3b82f6;
+      color: white;
+      border-color: #2563eb;
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .selectable-card.disabled {
+      background-color: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+      border-color: #d1d5db;
+    }
+
+    .selectable-card.disabled:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .swal2-html-container {
+      text-align: left !important;
+      margin-left: 1.25em !important;
+      font-size: 0.95em;
+    }
+
+    .swal2-html-container strong {
+      color: #3b82f6;
+    }
+
+    .swal2-html-container ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin-top: 0.5em;
+    }
+
+    .swal2-html-container li {
+      margin-bottom: 0.5em;
+    }
+
+    .time-slot-loading-message {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 1rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body class="form-container">
+  <div class="form-card w-full max-w-2xl">
+    <div class="form-header">
+      <h1 class="text-2xl font-bold text-center">Formulir Pendaftaran Janji Temu</h1>
+    </div>
+    <form id="patientForm" class="p-6 md:p-8 space-y-6">
+      <div>
+        <label for="patientName" class="block text-sm font-medium text-gray-700 mb-1">Nama Pasien</label>
+        <input type="text" id="patientName" name="patientName" required
+          class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          placeholder="Masukkan nama lengkap pasien" />
+      </div>
+
+      <div>
+        <span class="block text-sm font-medium text-gray-700 mb-2">Jenis Kunjungan</span>
+        <div class="flex flex-wrap custom-radio">
+          <div class="mb-2 sm:mb-0">
+            <input type="radio" id="layananBayiRadio" name="serviceType" value="bayi" onclick="toggleServiceDetails()"
+              required />
+            <label for="layananBayiRadio">Layanan Bayi</label>
+          </div>
+          <div class="mb-2 sm:mb-0">
+            <input type="radio" id="keluhanUmumRadio" name="serviceType" value="keluhan"
+              onclick="toggleServiceDetails()" required />
+            <label for="keluhanUmumRadio">Keluhan Umum</label>
+          </div>
+        </div>
+      </div>
+
+      <div id="layananBayiDetails" class="hidden space-y-3 fade-in">
+        <label for="babyService" class="block text-sm font-medium text-gray-700">Pilih Layanan Bayi</label>
+        <select id="babyService" name="babyService"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white">
+          <option value="" disabled selected>-- Pilih Layanan --</option>
+          <option value="pemeriksaan_rutin">Pemeriksaan Rutin</option>
+          <option value="imunisasi">Imunisasi</option>
+          <option value="konsultasi_gizi">Konsultasi Gizi</option>
+        </select>
+      </div>
+
+      <div id="keluhanDetails" class="hidden space-y-3 fade-in">
+        <label for="complaint" class="block text-sm font-medium text-gray-700">Jelaskan Keluhan Anda</label>
+        <textarea id="complaint" name="complaint" rows="4"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          placeholder="Tuliskan keluhan yang Anda rasakan..."></textarea>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Hari Janji Temu</label>
+        <div id="daySelectionContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <p class="time-slot-loading-message">Memuat hari tersedia...</p>
+        </div>
+      </div>
+
+      <div id="timeSlotSection" class="hidden mt-4 fade-in">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Jam Janji Temu (<span id="selectedDayText"
+            class="font-semibold"></span>)</label>
+        <div id="timeSlotContainer" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+          <p class="time-slot-loading-message">Pilih hari terlebih dahulu.</p>
+        </div>
+      </div>
+      <input type="hidden" id="selectedAppointmentDayTime" name="appointmentDayTime" required />
+
+      <div>
+        <label for="doctor" class="block text-sm font-medium text-gray-700 mb-1">Pilih Dokter</label>
+        <select id="doctor" name="doctor" required disabled
+          class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white">
+          <option value="" disabled selected>-- Pilih jam terlebih dahulu --</option>
+        </select>
+      </div>
+
+      <div class="pt-4">
+        <button type="submit" id="submitButton"
+          class="submit-button w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          Daftar Janji Temu
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let db;
+    const BOOKING_LIMIT_PER_SLOT = 2;
+
+    const dayKeyToNameMap = {
+      "senin": "Senin", "selasa": "Selasa", "rabu": "Rabu",
+      "kamis": "Kamis", "jumat": "Jumat", "sabtu": "Sabtu"
+    };
+    const dayNameDisplayOrder = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+
+    let allDoctorSchedules = {}; // Akan menyimpan jadwal untuk semua dokter
+    let selectedDoctorUID = null;
+    let selectedDayName = null;
+    let selectedDayKey = null;
+    let selectedTimeSlot = null;
+
+    const daySelectionContainer = document.getElementById("daySelectionContainer");
+    const timeSlotSection = document.getElementById("timeSlotSection");
+    const timeSlotContainer = document.getElementById("timeSlotContainer");
+    const selectedDayText = document.getElementById("selectedDayText");
+    const hiddenAppointmentInput = document.getElementById("selectedAppointmentDayTime");
+    const patientForm = document.getElementById("patientForm");
+    const submitButton = document.getElementById("submitButton");
+    const layananBayiRadioEl = document.getElementById("layananBayiRadio");
+    const keluhanUmumRadioEl = document.getElementById("keluhanUmumRadio");
+    const babyServiceSelectEl = document.getElementById("babyService");
+    const doctorSelectEl = document.getElementById("doctor");
+
+    /**
+     * Menginisialisasi Firebase dan memuat daftar hari yang tersedia dari semua jadwal dokter.
+     */
+    async function initializeFirebaseAndLoadDays() {
+      console.log("RESERVATION: Initializing Firebase and loading available days...");
+      try {
+        const response = await fetch("/api/firebase-client-config");
+        if (!response.ok) throw new Error(`Gagal mengambil konfigurasi Firebase: ${response.statusText}`);
+        const firebaseConfig = await response.json();
+        if (!firebaseConfig.apiKey || !firebaseConfig.projectId) throw new Error("Konfigurasi Firebase dari API tidak lengkap.");
+
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        console.log("RESERVATION: Firebase berhasil diinisialisasi.");
+
+        await loadAllAvailableDays(); // Panggil fungsi baru untuk memuat semua hari
+      } catch (error) {
+        console.error("RESERVATION: Error initializing Firebase:", error);
+        Swal.fire("Error Kritis", "Gagal memuat layanan formulir. Coba muat ulang halaman.", "error");
+        submitButton.disabled = true;
+        daySelectionContainer.innerHTML = '<p class="text-red-500 text-center col-span-full">Layanan tidak tersedia.</p>';
+      }
+    }
+
+    /**
+     * Memuat semua hari yang memiliki setidaknya satu slot 'available' dari jadwal dokter.
+     * Ini akan mengisi `allDoctorSchedules` dan merender kartu hari.
+     */
+    async function loadAllAvailableDays() {
+      console.log("RESERVATION: Loading all available days...");
+      daySelectionContainer.innerHTML = '<p class="time-slot-loading-message">Memuat hari tersedia...</p>';
+      timeSlotSection.classList.add("hidden"); // Sembunyikan bagian jam
+      doctorSelectEl.disabled = true; // Nonaktifkan dropdown dokter
+      doctorSelectEl.innerHTML = '<option value="" disabled selected>-- Pilih jam terlebih dahulu --</option>'; // Reset dropdown dokter
+
+      try {
+        const response = await fetch('/api/doctors-list'); // Ambil daftar semua dokter aktif
+        if (!response.ok) {
+          throw new Error(`Gagal mengambil daftar dokter: Server merespons ${response.status}`);
+        }
+        const result = await response.json();
+        if (!result.success || !result.doctors || result.doctors.length === 0) {
+          daySelectionContainer.innerHTML = '<p class="time-slot-loading-message">Tidak ada dokter atau jadwal tersedia saat ini.</p>';
+          return;
+        }
+
+        // Ambil jadwal untuk semua dokter untuk menemukan hari-hari yang tersedia secara keseluruhan
+        allDoctorSchedules = {}; // Reset jadwal global
+        let overallAvailableDays = new Set(); // Gunakan Set untuk menyimpan hari unik yang tersedia
+
+        for (const doctor of result.doctors) {
+          try {
+            const scheduleResponse = await fetch(`/api/public/doctor-schedule/${doctor.uid}`);
+            if (scheduleResponse.ok) {
+              const scheduleResult = await scheduleResponse.json();
+              if (scheduleResult.success && scheduleResult.schedule && scheduleResult.schedule.schedules) {
+                allDoctorSchedules[doctor.uid] = scheduleResult.schedule.schedules; // Simpan jadwal dokter
+                for (const dayKey in scheduleResult.schedule.schedules) {
+                  let hasAvailableSlot = false;
+                  for (const slot in scheduleResult.schedule.schedules[dayKey]) {
+                    if (scheduleResult.schedule.schedules[dayKey][slot] === 'available') {
+                      hasAvailableSlot = true;
+                      break;
+                    }
+                  }
+                  if (hasAvailableSlot) {
+                    overallAvailableDays.add(dayKey); // Tambahkan hari jika ada slot tersedia
+                  }
+                }
+              }
+            } else if (scheduleResponse.status !== 404) {
+              console.warn(`RESERVATION: Gagal memuat jadwal untuk dokter ${doctor.uid}: ${scheduleResponse.statusText}`);
+            }
+          } catch (error) {
+            console.error(`RESERVATION: Error fetching schedule for doctor ${doctor.uid}:`, error);
+          }
+        }
+
+        renderDayCards(overallAvailableDays); // Render kartu hari berdasarkan hari yang tersedia
+      } catch (error) {
+        console.error("RESERVATION: Error loading all available days:", error);
+        daySelectionContainer.innerHTML = '<p class="time-slot-loading-message text-red-500">Gagal memuat hari tersedia.</p>';
+      }
+    }
+
+    /**
+     * Merender kartu-kartu hari ke dalam kontainer pemilihan hari.
+     * @param {Set<string>} availableDayKeys - Set berisi kunci hari (e.g., 'senin') yang tersedia.
+     */
+    function renderDayCards(availableDayKeys) {
+      console.log("RESERVATION: Rendering day cards for available days:", availableDayKeys);
+      daySelectionContainer.innerHTML = ""; // Bersihkan kontainer hari
+
+      if (availableDayKeys.size === 0) {
+        daySelectionContainer.innerHTML = '<p class="time-slot-loading-message">Tidak ada hari dengan jadwal tersedia.</p>';
+        return;
+      }
+
+      // Urutkan dan render kartu hari sesuai urutan tampilan yang diinginkan
+      dayNameDisplayOrder.forEach(dayName => {
+        const dayKey = Object.keys(dayKeyToNameMap).find(key => dayKeyToNameMap[key] === dayName);
+        if (dayKey && availableDayKeys.has(dayKey)) {
+          const card = document.createElement("button");
+          card.type = "button";
+          card.classList.add("selectable-card", "day-card");
+          card.textContent = dayName;
+          card.dataset.dayKey = dayKey;
+          card.dataset.dayName = dayName;
+          card.addEventListener("click", handleDaySelection);
+          daySelectionContainer.appendChild(card);
+        }
+      });
+    }
+
+    /**
+     * Menangani pemilihan hari. Saat hari dipilih, ini akan mereset pilihan jam dan dokter,
+     * lalu memuat slot jam yang tersedia untuk hari tersebut dari semua dokter.
+     * @param {Event} event - Event klik dari kartu hari.
+     */
+    async function handleDaySelection(event) {
+      const dayCard = event.currentTarget;
+      selectedDayName = dayCard.dataset.dayName;
+      selectedDayKey = dayCard.dataset.dayKey;
+      selectedTimeSlot = null; // Reset pilihan jam
+      selectedDoctorUID = null; // Reset pilihan dokter
+      hiddenAppointmentInput.value = ""; // Bersihkan input tersembunyi
+
+      // Hapus kelas 'selected' dari semua kartu hari dan tambahkan ke kartu yang dipilih
+      document.querySelectorAll(".day-card").forEach((card) => card.classList.remove("selected"));
+      dayCard.classList.add("selected");
+
+      // Reset dan nonaktifkan dropdown dokter
+      doctorSelectEl.disabled = true;
+      doctorSelectEl.innerHTML = '<option value="" disabled selected>-- Pilih jam terlebih dahulu --</option>';
+
+      console.log(`RESERVATION: Hari dipilih: ${selectedDayName} (key: ${selectedDayKey})`);
+      await refreshTimeSlotsForDay(); // Muat slot jam yang tersedia untuk hari yang dipilih
+    }
+
+    /**
+     * Memuat dan merender slot jam yang tersedia untuk hari yang dipilih,
+     * dengan menggabungkan ketersediaan dari semua dokter.
+     */
+    async function refreshTimeSlotsForDay() {
+      if (!db || !selectedDayKey) {
+        console.warn("RESERVATION: refreshTimeSlotsForDay - Pre-conditions not met.");
+        timeSlotContainer.innerHTML = '<p class="time-slot-loading-message">Pilih hari yang valid.</p>';
+        timeSlotSection.classList.remove("hidden");
+        return;
+      }
+
+      timeSlotSection.classList.remove("hidden");
+      selectedDayText.textContent = dayKeyToNameMap[selectedDayKey];
+      timeSlotContainer.innerHTML = `<p class="time-slot-loading-message">Memuat jam tersedia untuk ${selectedDayText.textContent}...</p>`;
+
+      let combinedTimeSlots = {}; // Objek untuk menggabungkan semua slot waktu yang tersedia untuk hari yang dipilih dari semua dokter
+
+      // Iterasi melalui jadwal semua dokter untuk menemukan slot waktu yang tersedia
+      for (const doctorUID in allDoctorSchedules) {
+        const schedule = allDoctorSchedules[doctorUID];
+        if (schedule[selectedDayKey]) { // Jika dokter memiliki jadwal untuk hari yang dipilih
+          for (const slot in schedule[selectedDayKey]) {
+            if (schedule[selectedDayKey][slot] === 'available') {
+              combinedTimeSlots[slot] = 'available'; // Tandai sebagai tersedia jika ada dokter yang memilikinya
+            }
+          }
+        }
+      }
+
+      renderTimeSlotCards(combinedTimeSlots); // Render kartu slot jam
+    }
+
+    /**
+     * Merender kartu-kartu slot waktu ke dalam kontainer pemilihan jam.
+     * @param {Object} slotsForDay - Objek berisi slot waktu yang tersedia untuk hari yang dipilih.
+     */
+    function renderTimeSlotCards(slotsForDay) {
+      console.log("RESERVATION: renderTimeSlotCards for day:", selectedDayKey, "Slots from schedule:", slotsForDay);
+      timeSlotContainer.innerHTML = ""; // Bersihkan kontainer slot jam
+
+      if (!slotsForDay || Object.keys(slotsForDay).length === 0) {
+        timeSlotContainer.innerHTML = '<p class="time-slot-loading-message">Tidak ada slot waktu tersedia untuk hari ini.</p>';
+        return;
+      }
+
+      let hasAvailableTimeSlots = false;
+      const sortedSlots = Object.keys(slotsForDay).sort(); // Urutkan slot waktu
+
+      sortedSlots.forEach((slot) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.classList.add("selectable-card", "time-slot-card");
+        card.textContent = slot;
+        card.dataset.time = slot;
+        card.addEventListener("click", handleTimeSelection);
+        timeSlotContainer.appendChild(card);
+        hasAvailableTimeSlots = true;
+      });
+
+      if (!hasAvailableTimeSlots) {
+        timeSlotContainer.innerHTML = '<p class="time-slot-loading-message">Tidak ada slot waktu yang tersedia untuk hari ini.</p>';
+      }
+    }
+
+    /**
+     * Menangani pemilihan slot waktu. Saat slot waktu dipilih, ini akan mereset pilihan dokter
+     * dan memuat daftar dokter yang tersedia untuk hari dan jam yang dipilih.
+     * @param {Event} event - Event klik dari kartu slot waktu.
+     */
+    async function handleTimeSelection(event) {
+      if (event.currentTarget.classList.contains("disabled")) return;
+
+      selectedTimeSlot = event.currentTarget.dataset.time;
+      selectedDoctorUID = null; // Reset pilihan dokter
+      hiddenAppointmentInput.value = ""; // Bersihkan input tersembunyi sampai dokter dipilih
+
+      // Hapus kelas 'selected' dari semua kartu jam dan tambahkan ke kartu yang dipilih
+      document.querySelectorAll(".time-slot-card").forEach((card) => card.classList.remove("selected"));
+      event.currentTarget.classList.add("selected");
+
+      if (selectedDayKey && selectedTimeSlot) {
+        console.log(`RESERVATION: Jam dipilih: ${selectedTimeSlot} untuk hari ${selectedDayName}`);
+        await loadAvailableDoctorsForSlot(selectedDayKey, selectedTimeSlot); // Muat dokter yang tersedia
+      } else {
+        // Jika hari atau jam tidak terpilih, nonaktifkan dropdown dokter
+        doctorSelectEl.disabled = true;
+        doctorSelectEl.innerHTML = '<option value="" disabled selected>-- Pilih jam terlebih dahulu --</option>';
+      }
+    }
+
+    /**
+     * Memuat dan mengisi dropdown dokter dengan dokter yang tersedia untuk hari dan jam tertentu.
+     * @param {string} dayKey - Kunci hari (e.g., 'senin').
+     * @param {string} timeSlot - Slot waktu (e.g., '08:00 - 09:00').
+     */
+    async function loadAvailableDoctorsForSlot(dayKey, timeSlot) {
+      doctorSelectEl.disabled = true;
+      doctorSelectEl.innerHTML = '<option value="" disabled selected>-- Memuat dokter tersedia... --</option>';
+      console.log(`RESERVATION: Loading available doctors for ${dayKey}, ${timeSlot}...`);
+
+      try {
+        const response = await fetch(`/api/available-doctors?dayKey=${dayKey}&timeSlot=${timeSlot}`);
+        if (!response.ok) {
+          throw new Error(`Gagal mengambil daftar dokter tersedia: ${response.statusText}`);
+        }
+        const result = await response.json();
+        if (result.success && result.doctors && result.doctors.length > 0) {
+          doctorSelectEl.innerHTML = '<option value="" disabled selected>-- Pilih Dokter --</option>';
+          result.doctors.forEach(doctor => {
+            const option = document.createElement('option');
+            option.value = doctor.uid;
+            option.textContent = doctor.displayName;
+            doctorSelectEl.appendChild(option);
+          });
+          doctorSelectEl.disabled = false; // Aktifkan dropdown dokter
+        } else {
+          doctorSelectEl.innerHTML = '<option value="" disabled selected>-- Tidak ada dokter tersedia --</option>';
+        }
+      } catch (error) {
+        console.error("RESERVATION: Error loading available doctors:", error);
+        doctorSelectEl.innerHTML = '<option value="" disabled selected>-- Gagal memuat dokter --</option>';
+      }
+    }
+
+    /**
+     * Menangani perubahan pada dropdown pemilihan dokter.
+     */
+    doctorSelectEl.addEventListener("change", function () {
+      selectedDoctorUID = this.value;
+      console.log("RESERVATION: Dokter dipilih:", selectedDoctorUID, this.options[this.selectedIndex].text);
+      // Perbarui input tersembunyi hanya jika hari, jam, dan dokter sudah dipilih
+      if (selectedDayName && selectedTimeSlot && selectedDoctorUID) {
+        hiddenAppointmentInput.value = `${selectedDayName}, ${selectedTimeSlot}`;
+      } else {
+        hiddenAppointmentInput.value = "";
+      }
+    });
+
+    /**
+     * Mengaktifkan/menonaktifkan detail layanan berdasarkan jenis kunjungan yang dipilih.
+     */
+    function toggleServiceDetails() {
+      const serviceType = document.querySelector('input[name="serviceType"]:checked');
+      const layananBayiDetails = document.getElementById("layananBayiDetails");
+      const keluhanDetails = document.getElementById("keluhanDetails");
+      const babyServiceSelect = document.getElementById("babyService");
+      const complaintTextarea = document.getElementById("complaint");
+
+      // Sembunyikan semua detail dan set required ke false
+      layananBayiDetails.classList.add("hidden");
+      keluhanDetails.classList.add("hidden");
+      babyServiceSelect.required = false;
+      complaintTextarea.required = false;
+
+      // Tampilkan detail yang relevan dan set required ke true
+      if (serviceType) {
+        if (serviceType.value === "bayi") {
+          layananBayiDetails.classList.remove("hidden");
+          babyServiceSelect.required = true;
+        } else if (serviceType.value === "keluhan") {
+          keluhanDetails.classList.remove("hidden");
+          complaintTextarea.required = true;
+        }
+      }
+    }
+
+    /**
+     * Mereset formulir dan semua pilihan yang terkait dengan jadwal.
+     */
+    function resetFormAndSelection() {
+      patientForm.reset();
+      selectedDoctorUID = null;
+      selectedDayName = null;
+      selectedDayKey = null;
+      selectedTimeSlot = null;
+      hiddenAppointmentInput.value = "";
+      timeSlotSection.classList.add("hidden");
+      timeSlotContainer.innerHTML = '<p class="time-slot-loading-message">Pilih hari terlebih dahulu.</p>';
+      doctorSelectEl.disabled = true;
+      doctorSelectEl.innerHTML = '<option value="" disabled selected>-- Pilih jam terlebih dahulu --</option>';
+      // Hapus kelas 'selected' dari semua kartu hari dan jam
+      document.querySelectorAll(".day-card.selected").forEach((card) => card.classList.remove("selected"));
+      document.querySelectorAll(".time-slot-card.selected").forEach((card) => card.classList.remove("selected"));
+      toggleServiceDetails(); // Reset tampilan detail layanan
+    }
+
+    /**
+     * Menangani pengiriman formulir janji temu.
+     */
+    patientForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      // --- DEBUGGING LOGS START ---
+      console.log("--- Form Submission Attempt ---");
+      console.log("selectedDoctorUID:", selectedDoctorUID);
+      console.log("hiddenAppointmentInput.value (appointmentFullDateTime):", hiddenAppointmentInput.value);
+      console.log("patientName:", document.getElementById("patientName").value);
+      console.log("serviceType:", document.querySelector('input[name="serviceType"]:checked')?.value);
+      if (document.querySelector('input[name="serviceType"]:checked')?.value === "bayi") {
+        console.log("babyService:", babyServiceSelectEl.value);
+      } else if (document.querySelector('input[name="serviceType"]:checked')?.value === "keluhan") {
+        console.log("complaint:", document.getElementById("complaint").value);
+      }
+      console.log("-----------------------------");
+      // --- DEBUGGING LOGS END ---
+
+      // Validasi pilihan hari, jam, dan dokter
+      if (!selectedDayKey || !selectedTimeSlot) {
+        Swal.fire({ icon: "error", title: "Oops...", text: "Silakan pilih hari dan jam janji temu terlebih dahulu!", confirmButtonColor: "#3B82F6" });
+        return;
+      }
+      if (!selectedDoctorUID) {
+        Swal.fire({ icon: "error", title: "Oops...", text: "Silakan pilih dokter terlebih dahulu!", confirmButtonColor: "#3B82F6" });
+        return;
+      }
+      if (!db) {
+        Swal.fire({ icon: "error", title: "Layanan Tidak Tersedia", text: "Tidak dapat terhubung ke layanan penjadwalan.", confirmButtonColor: "#3B82F6" });
+        return;
+      }
+
+      submitButton.disabled = true;
+      Swal.fire({ title: "Memverifikasi slot...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+      try {
+        // Lakukan pengecekan ketersediaan slot terakhir kali di sisi klien
+        const q = await db.collection("janjiTemu")
+          .where("appointmentDayName", "==", dayKeyToNameMap[selectedDayKey])
+          .where("appointmentTimeSlot", "==", selectedTimeSlot)
+          .where("doctorUID", "==", selectedDoctorUID)
+          .where("status", "in", ["Menunggu", "Diproses"])
+          .get();
+
+        if (q.size >= BOOKING_LIMIT_PER_SLOT) {
+          Swal.fire({
+            icon: "error", title: "Slot Tidak Tersedia",
+            text: `Slot untuk ${selectedDayName}, ${selectedTimeSlot} dengan ${doctorSelectEl.options[doctorSelectEl.selectedIndex].text} baru saja terisi. Pilih slot lain atau dokter lain.`,
+            confirmButtonColor: "#3B82F6",
+          });
+          // Muat ulang daftar dokter yang tersedia untuk slot yang sama
+          await loadAvailableDoctorsForSlot(selectedDayKey, selectedTimeSlot);
+          submitButton.disabled = false;
+          return;
+        }
+
+        Swal.update({ title: "Mengirim data...", text: "Mohon tunggu." });
+
+        const formData = new FormData(this);
+        const dataToSend = {
+          patientName: formData.get("patientName"),
+          visitType: formData.get("serviceType"),
+          appointmentFullDateTime: hiddenAppointmentInput.value,
+          appointmentDayName: dayKeyToNameMap[selectedDayKey], // Pastikan ini diatur
+          appointmentTimeSlot: selectedTimeSlot, // Pastikan ini diatur
+          doctorUID: selectedDoctorUID,
+          doctorDisplayName: doctorSelectEl.options[doctorSelectEl.selectedIndex].text,
+        };
+
+        let visitTypeDisplay = "";
+        let serviceDetailDisplay = "";
+
+        if (dataToSend.visitType === "bayi") {
+          dataToSend.serviceDetails = { type: formData.get("babyService") };
+          visitTypeDisplay = layananBayiRadioEl.nextElementSibling.textContent;
+          if (babyServiceSelectEl.value) serviceDetailDisplay = babyServiceSelectEl.options[babyServiceSelectEl.selectedIndex].text;
+        } else if (dataToSend.visitType === "keluhan") {
+          dataToSend.serviceDetails = { description: formData.get("complaint") };
+          visitTypeDisplay = keluhanUmumRadioEl.nextElementSibling.textContent;
+          serviceDetailDisplay = dataToSend.serviceDetails.description;
+        }
+        const doctorDisplay = doctorSelectEl.options[doctorSelectEl.selectedIndex].text;
+
+        // Kirim data ke backend
+        const response = await fetch("/api/submit-appointment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dataToSend),
+        });
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          let successMessageHtml = `<p>Data pasien <strong>${dataToSend.patientName}</strong> berhasil didaftarkan:</p><ul><li><strong>Kunjungan:</strong> ${visitTypeDisplay}</li>`;
+          if (dataToSend.visitType === "bayi" && serviceDetailDisplay) successMessageHtml += `<li><strong>Layanan:</strong> ${serviceDetailDisplay}</li>`;
+          else if (dataToSend.visitType === "keluhan" && serviceDetailDisplay) successMessageHtml += `<li><strong>Keluhan:</strong> ${serviceDetailDisplay}</li>`;
+          successMessageHtml += `<li><strong>Jadwal:</strong> ${dataToSend.appointmentFullDateTime}</li><li><strong>Dokter:</strong> ${doctorDisplay}</li></ul>`;
+          Swal.fire({
+            icon: "success", title: "Pendaftaran Berhasil!", html: successMessageHtml,
+            confirmButtonText: "Kembali ke Halaman Awal", confirmButtonColor: "#3B82F6",
+            allowOutsideClick: false,
+          }).then((actionResult) => {
+            if (actionResult.isConfirmed) { window.location.href = "/"; }
+          });
+          resetFormAndSelection(); // Reset formulir setelah berhasil
+        } else {
+          Swal.fire({ icon: "error", title: "Pendaftaran Gagal", text: result.message || "Terjadi kesalahan.", confirmButtonColor: "#3B82F6" });
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        Swal.fire({ icon: "error", title: "Koneksi Gagal", text: "Tidak dapat terhubung ke server.", confirmButtonColor: "#3B82F6" });
+      } finally {
+        submitButton.disabled = false; // Aktifkan kembali tombol submit
+      }
+    });
+
+    // Event listener saat DOM selesai dimuat
+    document.addEventListener("DOMContentLoaded", () => {
+      initializeFirebaseAndLoadDays(); // Panggil fungsi inisialisasi baru
+      toggleServiceDetails(); // Atur tampilan detail layanan awal
+    });
+  </script>
+</body>
+
+</html>
