@@ -15,7 +15,7 @@ const conversationState = {
 };
 
 // --- Initialization ---
-window.onload = function() {
+window.onload = function () {
     displayBotMessage(medicalData.general_responses.greeting);
     setTimeout(() => {
         showInitialOptions();
@@ -178,7 +178,15 @@ function proceedAfterInitialSelection() {
         return;
     }
     displayUserMessage(`Gejala awal yang dipilih: ${conversationState.initialSymptomsSelected.join(', ')}`);
+
+    // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+    console.log("DEBUG: proceedAfterInitialSelection - Gejala awal yang dipilih:", conversationState.initialSymptomsSelected);
+
     updatePossibleDiseases();
+
+    // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+    console.log("DEBUG: proceedAfterInitialSelection - Penyakit potensial setelah pemilihan awal:", conversationState.possibleDiseases.map(d => d.name));
+
 
     if (conversationState.possibleDiseases.length === 0) {
         displayBotMessage(medicalData.general_responses.no_match);
@@ -193,68 +201,111 @@ function proceedAfterInitialSelection() {
 
 // 4. Update possible diseases
 function updatePossibleDiseases() {
-    const initialSymptomsLower = conversationState.initialSymptomsSelected.map(s => s.toLowerCase());
-    const positiveFollowUps = conversationState.askedFollowUpSymptoms.filter(s => !conversationState.negativeSymptoms.includes(s));
-    const currentSelectedSymptomsLower = conversationState.initialSymptomsSelected.concat(positiveFollowUps).map(s => s.toLowerCase());
-    const negativeSymptomsLower = conversationState.negativeSymptoms.map(s => s.toLowerCase());
+    // Pastikan semua gejala yang diproses di-trim
+    const initialSymptomsLower = conversationState.initialSymptomsSelected.map(s => s.toLowerCase().trim());
+    const positiveFollowUps = conversationState.askedFollowUpSymptoms.filter(s => !conversationState.negativeSymptoms.includes(s)).map(s => s.toLowerCase().trim());
+    const currentSelectedSymptomsLower = conversationState.initialSymptomsSelected.concat(positiveFollowUps).map(s => s.toLowerCase().trim());
+    const negativeSymptomsLower = conversationState.negativeSymptoms.map(s => s.toLowerCase().trim());
     const isInitialFilter = conversationState.askedFollowUpSymptoms.length === 0 && conversationState.negativeSymptoms.length === 0;
 
     let potentialDiseases = [];
 
+    // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+    console.log("DEBUG: updatePossibleDiseases - Gejala positif saat ini:", currentSelectedSymptomsLower);
+    console.log("DEBUG: updatePossibleDiseases - Gejala negatif saat ini:", negativeSymptomsLower);
+    console.log("DEBUG: updatePossibleDiseases - Apakah filter awal?", isInitialFilter);
+
+    // Deklarasikan variabel di luar blok if/else
+    let hasAllSelected = true;
+    let hasDisprovedSymptom = false;
+
+
     medicalData.diseases.forEach(disease => {
         const allDiseaseSymptoms = [];
         for (const category in disease.symptomCategories) {
-            allDiseaseSymptoms.push(...disease.symptomCategories[category]);
+            // Pastikan semua gejala dari data.js juga di-trim
+            disease.symptomCategories[category].forEach(symptom => {
+                allDiseaseSymptoms.push(symptom.toLowerCase().trim());
+            });
         }
-        const allDiseaseSymptomsLower = allDiseaseSymptoms.map(s => s.toLowerCase());
+        const allDiseaseSymptomsLower = allDiseaseSymptoms; // Sudah di-lowercase dan trim di atas
         let isPossible = false;
+
+        // --- Log tambahan untuk setiap penyakit ---
+        console.log(`DEBUG: updatePossibleDiseases - Memproses penyakit: ${disease.name}`);
+        console.log(`  Gejala penyakit (lowercased & trimmed):`, allDiseaseSymptomsLower);
+
 
         if (isInitialFilter) {
             if (initialSymptomsLower.length > 0) {
                 isPossible = initialSymptomsLower.some(initialSymptom =>
+                    // Reverted to flexible check: does the disease's symptom list contain the initial symptom, or vice versa?
                     allDiseaseSymptomsLower.some(ds => ds.includes(initialSymptom) || initialSymptom.includes(ds))
                 );
             }
         } else {
-            let hasAllSelected = true;
+            // Reset for each disease in the loop
+            hasAllSelected = true;
+            hasDisprovedSymptom = false;
+
             if (currentSelectedSymptomsLower.length > 0) {
-                 for (const selected of currentSelectedSymptomsLower) {
-                     if (!allDiseaseSymptomsLower.some(ds => ds.includes(selected) || selected.includes(ds))) {
-                         hasAllSelected = false;
-                         break;
-                     }
-                 }
+                for (const selected of currentSelectedSymptomsLower) {
+                    // Periksa apakah gejala yang dipilih ada di antara gejala penyakit (fleksibel)
+                    const foundMatch = allDiseaseSymptomsLower.some(ds => ds.includes(selected) || selected.includes(ds));
+                    console.log(`    Checking positive symptom: "${selected}" in ${disease.name}. Found: ${foundMatch}`);
+                    if (!foundMatch) {
+                        hasAllSelected = false;
+                        break;
+                    }
+                }
             }
-            let hasNegativeConflict = false;
+
+            // Kita ingin memastikan bahwa penyakit TIDAK memiliki gejala yang disangkal (negatif).
+            // Jika ada gejala negatif yang ditemukan dalam daftar gejala penyakit, maka penyakit tersebut TIDAK mungkin.
             if (negativeSymptomsLower.length > 0) {
-                 for (const negative of negativeSymptomsLower) {
-                     if (allDiseaseSymptomsLower.some(ds => ds.includes(negative) || negative.includes(ds))) {
-                         hasNegativeConflict = true;
-                         break;
-                     }
-                 }
+                for (const negative of negativeSymptomsLower) {
+                    // Jika gejala negatif ADA di antara gejala penyakit (fleksibel), maka penyakit ini dikesampingkan.
+                    const foundNegativeMatch = allDiseaseSymptomsLower.some(ds => ds.includes(negative) || negative.includes(ds));
+                    console.log(`    Checking negative symptom: "${negative}" in ${disease.name}. Found: ${foundNegativeMatch}`);
+                    if (foundNegativeMatch) {
+                        hasDisprovedSymptom = true;
+                        break;
+                    }
+                }
             }
-            isPossible = hasAllSelected && !hasNegativeConflict;
+
+            isPossible = hasAllSelected && !hasDisprovedSymptom; // Menggunakan hasDisprovedSymptom
         }
 
         if (isPossible) {
             let matchScore = 0;
-             currentSelectedSymptomsLower.forEach(selected => {
-                 if (allDiseaseSymptomsLower.some(ds => ds.includes(selected) || selected.includes(ds))) {
+            currentSelectedSymptomsLower.forEach(selected => {
+                // Flexible check for scoring
+                if (allDiseaseSymptomsLower.some(ds => ds.includes(selected) || selected.includes(ds))) {
                     matchScore++;
-                 }
-             });
+                }
+            });
             potentialDiseases.push({ disease: disease, score: matchScore });
+        }
+        // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+        console.log(`DEBUG: updatePossibleDiseases - Hasil untuk ${disease.name}. isPossible: ${isPossible}`);
+        if (!isPossible) {
+            console.log(`  Alasan tidak mungkin: hasAllSelected=${hasAllSelected}, hasDisprovedSymptom=${hasDisprovedSymptom}`);
         }
     });
 
     potentialDiseases.sort((a, b) => b.score - a.score);
     conversationState.possibleDiseases = potentialDiseases.map(item => item.disease);
-    console.log("Updated Possible Diseases:", conversationState.possibleDiseases.map(d => d.name));
+    console.log("Updated Possible Diseases:", conversationState.possibleDiseases.map(d => d.name)); // Ini sudah ada, bagus!
 }
 
 // 5. Ask follow-up questions
 function askFollowUpQuestion() {
+    // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+    console.log("DEBUG: askFollowUpQuestion - Memulai pertanyaan lanjutan. possibleDiseases.length:", conversationState.possibleDiseases.length);
+    console.log("DEBUG: askFollowUpQuestion - followUpCount:", conversationState.followUpCount, "maxFollowUps:", conversationState.maxFollowUps);
+
+
     if (conversationState.followUpCount >= conversationState.maxFollowUps ||
         conversationState.possibleDiseases.length <= 1) {
         if (conversationState.possibleDiseases.length > 0) {
@@ -268,7 +319,13 @@ function askFollowUpQuestion() {
 
     const distinguishingSymptom = getDistinguishingSymptoms();
 
+    // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+    console.log("DEBUG: askFollowUpQuestion - Gejala pembeda yang ditemukan:", distinguishingSymptom);
+
     if (!distinguishingSymptom) {
+        // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+        console.log("DEBUG: askFollowUpQuestion - Tidak ada gejala pembeda yang ditemukan. Mengarah ke diagnosis atau no_match.");
+
         if (conversationState.possibleDiseases.length > 0) {
             showDiagnosis(conversationState.possibleDiseases[0]);
         } else {
@@ -321,39 +378,56 @@ function getDistinguishingSymptoms() {
     const allPossibleSymptoms = new Set();
     const positiveSymptomsLower = conversationState.initialSymptomsSelected.concat(
         conversationState.askedFollowUpSymptoms.filter(s => !conversationState.negativeSymptoms.includes(s))
-    ).map(s => s.toLowerCase());
-    const askedFollowUpsLower = conversationState.askedFollowUpSymptoms.map(s => s.toLowerCase());
+    ).map(s => s.toLowerCase().trim()); // Tambahkan trim
+    const askedFollowUpsLower = conversationState.askedFollowUpSymptoms.map(s => s.toLowerCase().trim()); // Tambahkan trim
+
+    // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+    console.log("DEBUG: getDistinguishingSymptoms - Penyakit yang sedang dipertimbangkan:", possibleDiseases.map(d => d.name));
+    console.log("DEBUG: getDistinguishingSymptoms - Gejala positif yang sudah dikonfirmasi:", positiveSymptomsLower);
+    console.log("DEBUG: getDistinguishingSymptoms - Gejala yang sudah ditanyakan:", askedFollowUpsLower);
+
 
     possibleDiseases.forEach(disease => {
         for (const category in disease.symptomCategories) {
             disease.symptomCategories[category].forEach(symptom => {
-                const symptomLower = symptom.toLowerCase();
-                if (!positiveSymptomsLower.includes(symptomLower) &&
-                    !askedFollowUpsLower.includes(symptomLower)) {
-                    allPossibleSymptoms.add(symptom);
+                const symptomLower = symptom.toLowerCase().trim(); // Tambahkan trim
+                // Hanya pertimbangkan gejala yang belum dikonfirmasi positif dan belum ditanyakan
+                if (!positiveSymptomsLower.some(ps => ps.includes(symptomLower) || symptomLower.includes(ps)) &&
+                    !askedFollowUpsLower.some(as => as.includes(symptomLower) || symptomLower.includes(as))) {
+                    allPossibleSymptoms.add(symptom); // Tambahkan gejala asli (tidak di-trim/lowercase) ke Set
                     symptomFrequency[symptom] = (symptomFrequency[symptom] || 0) + 1;
                 }
             });
         }
     });
 
+    // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+    console.log("DEBUG: getDistinguishingSymptoms - Semua gejala potensial yang belum ditanyakan:", Array.from(allPossibleSymptoms));
+    console.log("DEBUG: getDistinguishingSymptoms - Frekuensi gejala potensial:", symptomFrequency);
+
+
     let bestSymptom = null;
     let minDifference = possibleDiseases.length;
 
     for (const symptom of allPossibleSymptoms) {
         const frequency = symptomFrequency[symptom];
+        // Gejala pembeda yang baik harus ada di lebih dari 0 penyakit tapi kurang dari semua penyakit
         if (frequency > 0 && frequency < possibleDiseases.length) {
             const difference = Math.abs(frequency - possibleDiseases.length / 2);
             if (difference < minDifference) {
                 minDifference = difference;
                 bestSymptom = symptom;
             } else if (difference === minDifference) {
+                // Jika perbedaan sama, pilih yang frekuensinya lebih tinggi (lebih umum di antara yang tersisa)
                 if (frequency > (symptomFrequency[bestSymptom] || 0)) {
                     bestSymptom = symptom;
                 }
             }
         }
     }
+    // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+    console.log("DEBUG: getDistinguishingSymptoms - Gejala pembeda terbaik yang dipilih:", bestSymptom);
+
     return bestSymptom;
 }
 
@@ -399,6 +473,9 @@ function showDiagnosis(disease) {
 
 // 8. Show general symptom info
 function showGeneralSymptomInfo(symptoms) {
+    // --- TAMBAHKAN CONSOLE.LOG DI SINI ---
+    console.log("DEBUG: showGeneralSymptomInfo dipanggil. Gejala yang diberikan:", symptoms);
+
     if (!symptoms || symptoms.length === 0) {
         offerReservationOrRestart();
         return;
@@ -495,7 +572,7 @@ function askToStartOver() {
 
         chatLog.appendChild(choiceWrapper);
         scrollToBottom();
-    }, 1000);
+    })
 }
 
 function resetChat() {
